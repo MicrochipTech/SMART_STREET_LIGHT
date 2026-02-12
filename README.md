@@ -1,4 +1,4 @@
-# SMART_STREET_LIGHT
+# SMART_STREET_LIGHT <!-- omit in toc -->
 
 <img src="images/IoT-Made-Easy-Logo.png" width=100>
 
@@ -8,7 +8,7 @@ Devices: **| PIC32-BZ6, WLR089U0, GM02S |**<br>
 Features: **| DALI D4i, BLE, 802.15.4 Mesh Network, LoRaWAN, LTE-M |**
 
 
-## ⚠ Disclaimer
+## ⚠ Disclaimer <!-- omit in toc -->
 
 <p><span style="color:red"><b>
 THE SOFTWARE ARE PROVIDED "AS IS" AND GIVE A PATH FOR SELF-SUPPORT AND SELF-MAINTENANCE. This repository contains example code intended to help accelerate client product development. </br>
@@ -18,93 +18,47 @@ For additional Microchip repos, see: <a href="https://github.com/Microchip-MPLAB
 Checkout the <a href="https://microchipsupport.force.com/s/" target="_blank">Technical support portal</a> to access our knowledge base, community forums or submit support ticket requests.
 </span></p></b>
 
-## Contents 
-- [SMART\_STREET\_LIGHT](#smart_street_light)
-  - [⚠ Disclaimer](#-disclaimer)
-  - [Contents](#contents)
-  - [Introduction](#introduction)
-  - [Solution Diagram](#solution-diagram)
-  - [Bill of Materials](#bill-of-materials)
-  - [Hardware Setup](#hardware-setup)
-    - [Overview](#overview)
-    - [Enable DALI connectivity](#enable-dali-connectivity)
-    - [Enable LTE-M connectivity](#enable-lte-m-connectivity)
-    - [Enable LoRaWAN connectivity](#enable-lorawan-connectivity)
-    - [3-Color RGB LED Module](#3-color-rgb-led-module)
-    - [External GPIO](#external-gpio)
-    - [Debug the system over UART](#debug-the-system-over-uart)
-    - [Power the entire system](#power-the-entire-system)
-  - [Software Setup](#software-setup)
-    - [Development Tools](#development-tools)
-    - [Additional Tools](#additional-tools)
-    - [MCC Content Libraries](#mcc-content-libraries)
-    - [Harmony MCC Configuration](#harmony-mcc-configuration)
-      - [Project Graph](#project-graph)
-      - [System Console, Debugging and Command Line Interface](#system-console-debugging-and-command-line-interface)
-      - [BLE Configuration](#ble-configuration)
-      - [LTE Module Configuration](#lte-module-configuration)
-      - [LoRaWAN Module Configuration](#lorawan-module-configuration)
-      - [DALI Interface Configuration](#dali-interface-configuration)
-  - [Cloud Platform](#cloud-platform)
-    - [The Things Network](#the-things-network)
-      - [1. Create an account and log in](#1-create-an-account-and-log-in)
-      - [2. Create a new TTN application](#2-create-a-new-ttn-application)
-      - [3. Register a new end device](#3-register-a-new-end-device)
-        - [Enter end device specifics manually](#enter-end-device-specifics-manually)
-        - [Activation method: OTAA](#activation-method-otaa)
-      - [Provisioning LoRaWAN Credentials into the PIC32-BZ6 Application](#provisioning-lorawan-credentials-into-the-pic32-bz6-application)
-        - [Option 1 - Update the source code](#option-1---update-the-source-code)
-        - [Option 2 - Use runtime commands](#option-2---use-runtime-commands)
-    - [Kaa IoT](#kaa-iot)
-  - [Application](#application)
-    - [System Overview](#system-overview)
-    - [Hardware Architecture](#hardware-architecture)
-      - [On-board Components](#on-board-components)
-      - [PIC32-BZ6 Pin Settings](#pic32-bz6-pin-settings)
-    - [Software Architecture](#software-architecture)
-      - [Overview](#overview-1)
-      - [Application Tasks](#application-tasks)
-    - [Application Commands](#application-commands)
-      - [Command Structure](#command-structure)
-      - [Serial Console and BLE Commands](#serial-console-and-ble-commands)
-      - [LoRaWAN RN Parser Commands](#lorawan-rn-parser-commands)
-      - [LTE Interface Commands](#lte-interface-commands)
-        - [`set_rgb_lte` - RGB LED commands](#set_rgb_lte---rgb-led-commands)
-        - [`switch_light` - DALI lighting commands](#switch_light---dali-lighting-commands)
-        - [`switch_gpio` - External GPIO control](#switch_gpio---external-gpio-control)
-      - [LORA Interface Commands](#lora-interface-commands)
-        - [TTN commands](#ttn-commands)
-    - [Application Messages](#application-messages)
-      - [LoRaWAN messages](#lorawan-messages)
-        - [TTN messages](#ttn-messages)
-      - [LTE messages](#lte-messages)
-  - [Board Programming](#board-programming)
-    - [WLR089 Xplained Pro](#wlr089-xplained-pro)
-    - [PIC32-BZ6 Curiosity](#pic32-bz6-curiosity)
-      - [Program the precompiled hex file using MPLAB X IPE](#program-the-precompiled-hex-file-using-mplab-x-ipe)
-      - [Build and program the application using MPLAB X IDE](#build-and-program-the-application-using-mplab-x-ide)
-  - [Run the demo](#run-the-demo)
-    - [System startup](#system-startup)
-    - [Interface activation](#interface-activation)
-    - [Control the demo from the Serial Console](#control-the-demo-from-the-serial-console)
-    - [Configure the LoRaWAN device](#configure-the-lorawan-device)
-    - [Configure the LTE MQTT server](#configure-the-lte-mqtt-server)
-    - [Control the demo from the MBD mobile app](#control-the-demo-from-the-mbd-mobile-app)
-    - [Control the demo from the TTN console](#control-the-demo-from-the-ttn-console)
-      - [Monitor the uplink messages](#monitor-the-uplink-messages)
-      - [Push downlink messages to the device](#push-downlink-messages-to-the-device)
-    - [Control the demo from the GUI](#control-the-demo-from-the-gui)
-    - [Troubleshootings](#troubleshootings)
-      - [DALI light driver not responding on the DALI bus](#dali-light-driver-not-responding-on-the-dali-bus)
-      - [RGB LED does not turn OFF](#rgb-led-does-not-turn-off)
-  - [Related links](#related-links)
-    - [Smart Street Lighting Applications](#smart-street-lighting-applications)
-    - [Wireless MCU with Advanced Peripherals](#wireless-mcu-with-advanced-peripherals)
-    - [LoRaWAN](#lorawan)
-    - [Cloud Platforms](#cloud-platforms)
-    - [LTE-M](#lte-m)
-    - [DALI](#dali)
-    - [Sensors](#sensors)
+## Contents <!-- omit in toc -->
+- [Introduction](#introduction)
+- [Solution Diagram](#solution-diagram)
+- [Bill of Materials](#bill-of-materials)
+- [Hardware Setup](#hardware-setup)
+  - [Overview](#overview)
+  - [Enable DALI connectivity](#enable-dali-connectivity)
+  - [Enable LTE-M connectivity](#enable-lte-m-connectivity)
+  - [Enable LoRaWAN connectivity](#enable-lorawan-connectivity)
+  - [3-Color RGB LED Module](#3-color-rgb-led-module)
+  - [External GPIO](#external-gpio)
+  - [Debug the system over UART](#debug-the-system-over-uart)
+  - [Power the entire system](#power-the-entire-system)
+- [Software Setup](#software-setup)
+  - [Development Tools](#development-tools)
+  - [Additional Tools](#additional-tools)
+  - [MCC Content Libraries](#mcc-content-libraries)
+  - [Harmony MCC Configuration](#harmony-mcc-configuration)
+- [Cloud Platform](#cloud-platform)
+  - [The Things Network](#the-things-network)
+  - [Kaa IoT](#kaa-iot)
+- [Application](#application)
+  - [System Overview](#system-overview)
+  - [Hardware Architecture](#hardware-architecture)
+  - [Software Architecture](#software-architecture)
+  - [Application Commands](#application-commands)
+  - [Application Messages](#application-messages)
+- [Board Programming](#board-programming)
+  - [WLR089 Xplained Pro](#wlr089-xplained-pro)
+  - [PIC32-BZ6 Curiosity](#pic32-bz6-curiosity)
+- [Run the demo](#run-the-demo)
+  - [System startup](#system-startup)
+  - [Interface activation](#interface-activation)
+  - [Control the demo from the Serial Console](#control-the-demo-from-the-serial-console)
+  - [Configure the LoRaWAN device](#configure-the-lorawan-device)
+  - [Configure the LTE MQTT server](#configure-the-lte-mqtt-server)
+  - [Control the demo from the MBD mobile app](#control-the-demo-from-the-mbd-mobile-app)
+  - [Control the demo from the TTN console](#control-the-demo-from-the-ttn-console)
+  - [Control the demo from the GUI](#control-the-demo-from-the-gui)
+  - [Troubleshootings](#troubleshootings)
+- [Related links](#related-links)
 
 ## Introduction
 <p align="left">
@@ -278,11 +232,11 @@ Power the entire system in the following order:
 
 ### Harmony MCC Configuration
 
-#### Project Graph
+#### Project Graph <!-- omit in toc -->
 
 <img src="images/mcc_project_graph.png" width=1000>
 
-#### System Console, Debugging and Command Line Interface
+#### System Console, Debugging and Command Line Interface <!-- omit in toc -->
 
 The system console uses SERCOM0 in USART mode and is accessible through the DEBUG USB connector.
 
@@ -292,7 +246,7 @@ In addition to standard console functions, it supports debugging and provides a 
 
 <img src="images/mcc_sercom0_console_command.png">
 
-#### BLE Configuration
+#### BLE Configuration <!-- omit in toc -->
 
 Configured in peripheral mode, the BLE stack allows incoming connections from a central device like a mobile app.
 
@@ -306,19 +260,19 @@ In addition to the BLE stack, the MCC Harmony v3 BLE component provides the Tran
 
 <img src="images/mcc_ble_transparent.png">
 
-#### LTE Module Configuration
+#### LTE Module Configuration <!-- omit in toc -->
 
 The application communicates with the LTE‑M module through SERCOM5 operating in USART mode.
 
 <img src="images/mcc_sercom5.png">
 
-#### LoRaWAN Module Configuration
+#### LoRaWAN Module Configuration <!-- omit in toc -->
 
 The application interfaces with the LoRaWAN module using SERCOM1 configured in USART mode.
 
 <img src="images/mcc_sercom1.png">
 
-#### DALI Interface Configuration
+#### DALI Interface Configuration <!-- omit in toc -->
 
 The application communicates with the light over the DALI bus using two GPIOs for transmit/receive signaling and one hardware Timer.
 
@@ -340,25 +294,25 @@ The application communicates with the light over the DALI bus using two GPIOs fo
 
 Follow the steps below to create your TTN application and register your device:
 
-#### 1. Create an account and log in
+#### 1. Create an account and log in <!-- omit in toc -->
 
 Create an account on TTN and sign in to the <a href="https://www.thethingsnetwork.org/get-started" target="_blank">Console</a>.
 
-#### 2. Create a new TTN application
+#### 2. Create a new TTN application <!-- omit in toc -->
 
 Follow the on-screen <a href="https://www.thethingsindustries.com/docs/integrations/adding-applications/">instructions</a> to create an application that will host your LoRaWAN devices.
 
-#### 3. Register a new end device
+#### 3. Register a new end device <!-- omit in toc -->
 
 Select <a href="https://www.thethingsindustries.com/docs/hardware/devices/adding-devices/">Register a new device</a>, then configure the following:
 
-##### Enter end device specifics manually
+##### Enter end device specifics manually <!-- omit in toc -->
 
 - Frequency plan: Europe 863-870MHz SF9 for RX2 (recommended)
 - LoRaWAN version: LoRaWAN specification 1.0.4
 - Regional Parameters version: RP002 Regional Parameters 1.0.2
 
-##### Activation method: <a href="https://www.thethingsindustries.com/docs/hardware/devices/adding-devices/manual/otaa/">OTAA</a>
+##### Activation method: <a href="https://www.thethingsindustries.com/docs/hardware/devices/adding-devices/manual/otaa/">OTAA</a> <!-- omit in toc -->
 
 - Additional LoRaWAN class capabilities: None (class A only)
 - Network defaults: Use network's default MAC settings
@@ -369,17 +323,17 @@ Select <a href="https://www.thethingsindustries.com/docs/hardware/devices/adding
 
 Click **Register end device** to complete the process.
 
-#### Provisioning LoRaWAN Credentials into the PIC32-BZ6 Application
+#### Provisioning LoRaWAN Credentials into the PIC32-BZ6 Application <!-- omit in toc -->
 
 You now have two options to inject the LoRaWAN credentials into the application
 
-##### Option 1 - Update the source code
+##### Option 1 - Update the source code <!-- omit in toc -->
 
 Copy the activation credentials from TTN and replace the default macro values in: `app_lora_wlr089.h`
 
 <img src="images/Device_Credentials_Code_Replace.png" width=1000>
 
-##### Option 2 - Use runtime commands
+##### Option 2 - Use runtime commands <!-- omit in toc -->
 
 Set the LoRaWAN keys using the `lorawan_set_keys <DevEUI> <JoinEUI> <AppKey>` command.
 
@@ -403,7 +357,7 @@ Refer to the list of [Serial console and BLE commands](#serial-console-and-ble-c
 
 ### Hardware Architecture
 
-#### On-board Components
+#### On-board Components <!-- omit in toc -->
 
 | Component            | Description               | Behavior |
 | :-                   | :-                        | :-       |
@@ -411,7 +365,7 @@ Refer to the list of [Serial console and BLE commands](#serial-console-and-ble-c
 | User button 1 (SW801) | RGB LED Control | Button pressed: toggle the on-board RGB LED state |
 | User button 2 (SW800) | LoRaWAN Join | Button pressed: trigger a LoRaWAN OTAA |
 
-#### PIC32-BZ6 Pin Settings
+#### PIC32-BZ6 Pin Settings <!-- omit in toc -->
 
 Below the list of available interfaces and the corresponding pin settings.
 
@@ -434,7 +388,7 @@ Below the list of available interfaces and the corresponding pin settings.
 
 ### Software Architecture
 
-#### Overview
+#### Overview <!-- omit in toc -->
 
 The application is organized into several software blocks, including:
 * The H3 BLE Stack, providing local control and maintenance features such as debugging via the mobile app.
@@ -447,7 +401,7 @@ The DALI stack from MBS GmbH was compiled as a dedicated library specifically fo
 
 <b><font color="red">Contact <a href="https://en.mbs-solutions.de/" target="_blank">MBS GmbH</a> to obtain access to the DALI software.</font></b>
 
-#### Application Tasks
+#### Application Tasks <!-- omit in toc -->
 
 This project is built using MPLAB Harmony v3 and runs on FreeRTOS. The application is structured into multiple tasks, each handling a specific system function:
 
@@ -462,7 +416,7 @@ This project is built using MPLAB Harmony v3 and runs on FreeRTOS. The applicati
 
 ### Application Commands
 
-#### Command Structure
+#### Command Structure <!-- omit in toc -->
 
 The project includes a built-in command interface that allows control of the entire application. Commands are issued by sending keywords - optionally followed by parameters - through the supported interfaces. <br>
 Command keywords are case-sensitive, and paramters must not contain spaces. Hexadecimal data may be entered in either uppercase or lowercase. String parameters are also case-insensitive. Depending on the command, parameters may use decimal or hexadecimal formats. Hex values are entered directly (e.g., FF for 0xFF). Strings are entered as plain text without quotation marks.
@@ -485,7 +439,7 @@ All four interfaces can control the on-board RGB LED, the DALI light, and the ex
 - The serial console and BLE interface share the same command set.
 </i>
 
-#### Serial Console and BLE Commands
+#### Serial Console and BLE Commands <!-- omit in toc -->
 
 Issue the commands below via the serial console or the BLE mobile app.
 
@@ -527,11 +481,11 @@ Issue the commands below via the serial console or the BLE mobile app.
 - When both `<UncnfMsg>` and `<CnfMsg>` are set to 0, the transmission scheme defaults to sending a single confirmed uplink.
 </i>
 
-#### LoRaWAN RN Parser Commands
+#### LoRaWAN RN Parser Commands <!-- omit in toc -->
 
 Beside the application commands listed above, the application handles <a href="https://github.com/MicrochipTech/atsamr34_lorawan_rn_parser/" target="_blank">LoRaWAN RN Parser commands</a> received via the serial console or BLE terminal and relays them directly to the WLR089U0 in passthrough mode.
 
-#### LTE Interface Commands
+#### LTE Interface Commands <!-- omit in toc -->
 
 The default configuration for receiving MQTT commands is defined in the `app_lte.h` file.<br>
 Use the `lte_set_params` command to adjust these parameters.
@@ -551,7 +505,7 @@ Issue the commands below via an MQTT client to control the RGB LED, the DALI lig
 | switch_light | dali_intensity | int (0-100) | DALI brightness       |
 | switch_gpio  | ext_gpio       | int (0/1)   | External GPIO control |
 
-##### `set_rgb_lte` - RGB LED commands
+##### `set_rgb_lte` - RGB LED commands <!-- omit in toc -->
 ```json
 {
   "rgb_led": 1,
@@ -562,7 +516,7 @@ Issue the commands below via an MQTT client to control the RGB LED, the DALI lig
 - Only Hue is updated (Saturation and Value stay unchanged)
 </i>
 
-##### `switch_light` - DALI lighting commands
+##### `switch_light` - DALI lighting commands <!-- omit in toc -->
 ```json
 {
   "dali_light": 1,
@@ -573,7 +527,7 @@ Issue the commands below via an MQTT client to control the RGB LED, the DALI lig
 - Intensity only applied if light is already ON and intensity is different from current value
 </i>
 
-##### `switch_gpio` - External GPIO control
+##### `switch_gpio` - External GPIO control <!-- omit in toc -->
 ```json
 {
   "ext_gpio": 1
@@ -583,7 +537,7 @@ The function below is defined in `app_lte.c` and performs an MQTT command parser
 
 **`Function: static void APP_Parse_Rx_Message(char *mqttRxTopic, char *mqttRxMessage)`**
 
-#### LORA Interface Commands
+#### LORA Interface Commands <!-- omit in toc -->
 
 The application processes LoRaWAN downlink messages in the function shown below, defined in `app_lora_wlr089.c`:
 
@@ -606,7 +560,7 @@ The 4-byte LoRaWAN downlink payload format is shown below.
 - `<Sat>`: 1-byte hex value representing the requested RGB color Saturation (00 to FF)
 - `<Val>`: 1-byte hex value representing the requested RGB color Value (00 to FF) or the light intensity
 
-##### TTN commands
+##### TTN commands <!-- omit in toc -->
 
 A custom JavaScript <a href="https://www.thethingsindustries.com/docs/integrations/payload-formatters/" target="_blank">payload formatter</a> is used to decode downlink messages before they are processed by the application. It is a useful feature for converting binary payloads into human-readable fields or performing other data transformations on downlinks.
 
@@ -679,7 +633,7 @@ function decodeDownlink(input) {
 
 The application periodically publishes messages to the cloud over both LoRaWAN and LTE.
 
-#### LoRaWAN messages
+#### LoRaWAN messages <!-- omit in toc -->
 
 The application transmits a LoRaWAN uplink payload every `PauseSec` seconds (min: 10 s, max: 60 s). The function below is defined in `app_lora_wlr089.c` and is invoked periodically to drive the uplink transmission scheme.
 
@@ -705,7 +659,7 @@ The following 9-byte payload structure defines the content of the transmitted da
 - `<DaliLightIntensity>`: 1-byte dec value representing the DALI light intensity (0 to 100)
 - `<ExtGpioStatus>`: 1-byte hex value representing the external GPIO status, `01` or `00`
 
-##### TTN messages
+##### TTN messages <!-- omit in toc -->
 
 A custom JavaScript <a href="https://www.thethingsindustries.com/docs/integrations/payload-formatters/" target="_blank">payload formatter</a> encodes uplink data into the expected payload format for the network server. It is a useful feature for converting binary payloads into human-readable fields or performing other data transformations on uplinks.
 
@@ -731,7 +685,7 @@ function decodeUplink(input) {
 }
 ```
 
-#### LTE messages
+#### LTE messages <!-- omit in toc -->
 
 Defined in `app_lte.c`, the application sends telemetry data to the cloud only when a change is detected, except for the the MQTT message counter, which is transmitted every 60 seconds.
 
@@ -766,11 +720,11 @@ Use the `lte_set_params` command to adjust these parameters.
 
 ### PIC32-BZ6 Curiosity
 
-#### Program the precompiled hex file using MPLAB X IPE
+#### Program the precompiled hex file using MPLAB X IPE <!-- omit in toc -->
 
 * The precompiled hex file is given in the hex folder. Follow the steps provided in the link to <a href="https://developerhelp.microchip.com/xwiki/bin/view/software-tools/ipe/production-mode/program-device/" target="_blank">program the precompiled hex file</a> using MPLAB X IPE to program the pre-compiled hex image.
 
-#### Build and program the application using MPLAB X IDE
+#### Build and program the application using MPLAB X IDE <!-- omit in toc -->
 
 The application folder can be found by navigating to the following path:
 * "firmware\peripheral_trp_uart.X"
@@ -939,13 +893,13 @@ Refer to the list of [Serial console and BLE commands](#serial-console-and-ble-c
 
 ### Control the demo from the TTN console
 
-#### Monitor the uplink messages
+#### Monitor the uplink messages <!-- omit in toc -->
 
 Observe the uplink messages sent by the device on the `Live data` page.
 
 <img src="images/ttn-live-data.png">
 
-#### Push downlink messages to the device
+#### Push downlink messages to the device <!-- omit in toc -->
 
 Schedule a downlink message to the device from the `Messaging` page.
 
@@ -963,12 +917,12 @@ The IoT dashboard provides real-time monitoring and control of the lighting devi
 
 ### Troubleshootings
 
-#### DALI light driver not responding on the DALI bus
+#### DALI light driver not responding on the DALI bus <!-- omit in toc -->
 
 - Disconnect the LED light from mains power and wait for the `BUSPOWER_OFF` event (bus voltage drops after ~15 seconds).
 - Reconnect the LED light.
 
-#### RGB LED does not turn OFF
+#### RGB LED does not turn OFF <!-- omit in toc -->
 
 In this demo, pin RPC10 is multiplexed with LTE_RESETN. When the LTE module is enabled, RGB_GREEN cannot be controlled, preventing the RGB LED from turning fully off.
 When the LTE module is disabled, RGB_GREEN behaves normally, and the RGB LED operates correctly.
@@ -977,36 +931,36 @@ When the LTE module is disabled, RGB_GREEN behaves normally, and the RGB LED ope
 
 ## Related links
 
-### Smart Street Lighting Applications
+### Smart Street Lighting Applications <!-- omit in toc -->
 - <a href="https://www.microchip.com/en-us/solutions/sustainability/street-lighting" target="_blank">Smart Street Lighting Applications</a>
 - <a href="https://www.microchip.com/en-us/tools-resources/reference-designs/smart-street-lighting-reference-design" target="_blank">Street Light Smart LED Driver Reference Design</a>
 - <a href="https://www.microchip.com/en-us/tools-resources/reference-designs/smart-street-light-controller-demonstration-application" target="_blank">Smart Street Light Controller Demonstration Application</a>
 
-### Wireless MCU with Advanced Peripherals
+### Wireless MCU with Advanced Peripherals <!-- omit in toc -->
 - <a href="https://www.microchip.com/en-us/products/microcontrollers/32-bit-mcus/pic32-sam/pic32-bz6" target="_blank">PIC32-BZ6 Wireless Microcontrollers (MCUs)</a>
 - <a href="https://www.microchip.com/en-us/development-tool/ev31u42a" target="_blank">PIC32-BZ6 Curiosity Board</a>
 - <a href="https://onlinedocs.microchip.com/oxy/GUID-657D3893-6C33-47F8-978B-86DB297AC33D-en-US-4/index.html" target="_blank">PIC32-BZ6 Application Developer's Guide</a>
 - <a href="https://github.com/Microchip-MPLAB-Harmony/wireless_apps_pic32_bz6" target="_blank">PIC32-BZ6 H3 Application Examples</a>
 
-### LoRaWAN
+### LoRaWAN <!-- omit in toc -->
 - <a href="https://www.microchip.com/en-us/product/wlr089u0" target="_blank">WLR089U0 Low Power LoRa(r) Sub-GHZ Module</a>
 - <a href="https://www.microchip.com/en-us/development-tool/EV23M25A" target="_blank">WLR089 Xplained Pro Evaluation Kit</a>
 
-### Cloud Platforms
+### Cloud Platforms <!-- omit in toc -->
 - <a href="https://www.thethingsnetwork.org/" target="_blank">The Things Network</a>
 - <a href="https://www.kaaiot.com/" target="_blank">Kaa IoT Platform</a>
 
-### LTE-M
+### LTE-M <!-- omit in toc -->
 - <a href="https://www.mikroe.com/lte-iot-10-click" target="_blank">LTE IoT 10 click</a>
 - <a href="https://sequans.com/chipset-module/monarch/#monarch-modules" target="_blank">Sequans Monarch 2 GM02S Module</a>
 
-### DALI
+### DALI <!-- omit in toc -->
 - <a href="https://www.mikroe.com/dali-2-click" target="_blank">DALI 2 Click</a>
 - <a href="https://en.mbs-solutions.de/dali-stack" target="_blank">DALI Software Stack from MBS GmbH</a>
 - <a href="https://en.mbs-solutions.de/s/2024-12-30_DALI_stack_Datenblatt_EN.pdf" target="_blank">MBS DALI Stack Datasheet</a>
 - <a href="https://en.mbs-solutions.de/s/DALI_LowLevel_17_EN.pdf" target="_blank">MBS DALI Low Level Driver</a>
 
-### Sensors
+### Sensors <!-- omit in toc -->
 - <a href="https://www.mikroe.com/microwave-5-click" target="_blank">Microwave 5 click</a>
 - <a href="https://www.mikroe.com/ambient-click" target="_blank">Ambient click</a>
 
