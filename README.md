@@ -428,7 +428,7 @@ Each interface supports a different command set, defined in the files listed bel
 | Serial console | `sys_command.c` | [Serial Console and BLE Commands](#serial-console-and-ble-commands) |
 | BLE peer device (MBD mobile app) | `app_trsps_handler.c` | [Serial Console and BLE Commands](#serial-console-and-ble-commands) |
 | LTE | `app_lte.c` | [LTE Interface Commands](#lte-interface-commands) |
-| LoRaWAN | `app_lora.c` | [LOTA Interface Commands](#lora-interface-commands) |
+| LoRaWAN | `app_lora.c` | [LORA Interface Commands](#lora-interface-commands) |
 
 All four interfaces can control the on-board RGB LED, the DALI light, and the external GPIO.
 
