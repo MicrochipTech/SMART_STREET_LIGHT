@@ -18,7 +18,7 @@ For additional Microchip repos, see: <a href="https://github.com/Microchip-MPLAB
 Checkout the <a href="https://microchipsupport.force.com/s/" target="_blank">Technical support portal</a> to access our knowledge base, community forums or submit support ticket requests.
 </span></p></b>
 
-## Contents <!-- omit in toc -->
+## Contents <a id="contents"></a> <!-- omit in toc -->
 - [Introduction](#introduction)
 - [Solution Diagram](#solution-diagram)
 - [Bill of Materials](#bill-of-materials)
@@ -357,7 +357,7 @@ Refer to the list of [Serial console and BLE commands](#serial-console-and-ble-c
 
 ### Hardware Architecture
 
-#### On-board Components <!-- omit in toc -->
+#### On-board Components <a id="on-board-components"></a> <!-- omit in toc -->
 
 | Component            | Description               | Behavior |
 | :-                   | :-                        | :-       |
@@ -428,7 +428,7 @@ Each interface supports a different command set, defined in the files listed bel
 | Serial console | `sys_command.c` | [Serial Console and BLE Commands](#serial-console-and-ble-commands) |
 | BLE peer device (MBD mobile app) | `app_trsps_handler.c` | [Serial Console and BLE Commands](#serial-console-and-ble-commands) |
 | LTE | `app_lte.c` | [LTE Interface Commands](#lte-interface-commands) |
-| LoRaWAN | `app_lora.c` | [LOTE Interface Commands](#lora-interface-commands) |
+| LoRaWAN | `app_lora.c` | [LOTA Interface Commands](#lora-interface-commands) |
 
 All four interfaces can control the on-board RGB LED, the DALI light, and the external GPIO.
 
@@ -439,7 +439,7 @@ All four interfaces can control the on-board RGB LED, the DALI light, and the ex
 - The serial console and BLE interface share the same command set.
 </i>
 
-#### Serial Console and BLE Commands <!-- omit in toc -->
+#### Serial Console and BLE Commands <a id="serial-console-and-ble-commands"> </a><!-- omit in toc -->
 
 Issue the commands below via the serial console or the BLE mobile app.
 
@@ -466,7 +466,7 @@ Issue the commands below via the serial console or the BLE mobile app.
 | `lorawan_get_keys` | Print the LoRaWAN credentials | - | lorawan_get_keys | Getting the Keys ... |
 | `lorawan_join` | Trigger a LoRaWAN OTAA | - | lorawan_join | Started to join the network ... |
 | `lorawan_set_uplink <PauseSec> <UncnfMsg> <CnfMsg>` | Set the LoRaWAN transmission scheme | `<PauseSec>`: interval in seconds between consecutive uplinks (10-60)<br>`<UncnfMsg>`: number of unconfirmed uplink messages in each transmission block (0-60)<br>`<CnfMsg>`: number of confirmed uplink messages in each transmission block (0-60)| lorawan_set_uplink 60 4 1 | Uplink configuration successfully set |
-| `lorawan_get_uplink` | Print the current uplink behavior | lorawan_get_uplink | `<PauseSec> <UncnfMsg> <CnfMsg>` |
+| `lorawan_get_uplink` | Print the current uplink behavior | - |lorawan_get_uplink | Uplink configuration `<PauseSec> <UncnfMsg> <CnfMsg>` |
 | `lorawan_start_uplink` | Start the LoRaWAN transmission | - | lorawan_start_uplink | regular message uplink started |
 | `lorawan_stop_uplink` | Stop the LoRaWAN transmission | - | lorawan_stop_uplink | message uplink stopped |
 | `ext_gpio_on` | Set the EXT_GPIO output to high | - | ext_gpio_on | External GPIO on |
@@ -485,7 +485,7 @@ Issue the commands below via the serial console or the BLE mobile app.
 
 Beside the application commands listed above, the application handles <a href="https://github.com/MicrochipTech/atsamr34_lorawan_rn_parser/" target="_blank">LoRaWAN RN Parser commands</a> received via the serial console or BLE terminal and relays them directly to the WLR089U0 in passthrough mode.
 
-#### LTE Interface Commands <!-- omit in toc -->
+#### LTE Interface Commands <a id="lte-interface-commands"> <!-- omit in toc -->
 
 The default configuration for receiving MQTT commands is defined in the `app_lte.h` file.<br>
 Use the `lte_set_params` command to adjust these parameters.
@@ -537,7 +537,7 @@ The function below is defined in `app_lte.c` and performs an MQTT command parser
 
 **`Function: static void APP_Parse_Rx_Message(char *mqttRxTopic, char *mqttRxMessage)`**
 
-#### LORA Interface Commands <!-- omit in toc -->
+#### LORA Interface Commands <a id="lora-interface-commands"> <!-- omit in toc -->
 
 The application processes LoRaWAN downlink messages in the function shown below, defined in `app_lora_wlr089.c`:
 
