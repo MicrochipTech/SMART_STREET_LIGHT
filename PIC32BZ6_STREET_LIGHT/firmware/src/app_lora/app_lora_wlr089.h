@@ -46,6 +46,9 @@
 #define LORA_DEFINE_CONFIRMED   "cnf"
 #define LORA_DEFINE_UNCONFIRMED "uncnf"
 
+#define LORA_DEFINE_JOIN_ACTION_START_UPLINK 0
+#define LORA_DEFINE_JOIN_ACTION_INFO_ONLY    1
+
 #define LORA_MSG_MIN_TIMEOUT    10  // ~10 seconds timeout
 #define LORA_MSG_MAX_TIMEOUT    60  // ~60 seconds timeout
 #define LORA_MSG_MIN_NUM_CNF    1   // minimum number of confirmed messages
@@ -53,15 +56,8 @@
 #define LORA_MSG_MIN_NUM_UNCNF  1   // minimum number of unconfirmed messages
 #define LORA_MSG_MAX_NUM_UNCNF  60  // maximum number of unconfirmed messages
 
-#define LORA_PERIODIC_MSG_CNT_UNCNF_MSG 2   // set to 0 to send confirmed messages only
-#define LORA_PERIODIC_MSG_CNT_ABORT_MSG 3
-
-//  Defines BLE Sensor Notify Command Set APP_TRPS_CTRL_NOTIFY
-#define LORA_ONOFF_STATUS_NFY 0x42
-
-//  Defines BLE Sensor Notify Command length APP_TRPS_CTRL_NOTIFY_LENGTH
-#define LORA_ONOFF_STATUS_NFY_LEN  0x1
-
+#define LORA_UPLINK_DEFAULT_CNT       2   // set to 0 to send confirmed messages only
+#define LORA_UPLINK_DEFAULT_MAX_ERROR 3   // message error counter value
 
 // *****************************************************************************
 // *****************************************************************************
@@ -100,7 +96,7 @@ void APP_LORA_WLR089_Get_Status(void);
 
 void APP_LORA_TimerTrig_Handler(void);
 void APP_LORA_Join_Handler(void);
-void APP_LORA_Get_Status(void);
-void APP_LORA_Set_MessageTxConfiguration(void);
+void APP_LORA_Get_Status(uint8_t action);
+bool APP_LORA_Uplink_ConfigureMessageAndStart(void);
 
 #endif  // APP_LORA_WLR089_H

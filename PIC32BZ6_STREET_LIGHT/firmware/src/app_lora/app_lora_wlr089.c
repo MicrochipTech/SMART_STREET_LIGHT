@@ -80,10 +80,8 @@ static int APP_LORA_WLR089_Status_Join(parserCmdInfo_t* paramList);
 // Section: Local Variables
 // *****************************************************************************
 // *****************************************************************************
-static volatile int8_t txMsgCnt = LORA_PERIODIC_MSG_CNT_UNCNF_MSG;
-static volatile int8_t txMsgErrCnt = 0;
-static volatile int8_t txMsgMaxErrCnt = 0;
-static volatile appLoraMsgConfig_t *pMsgConfig = NULL;
+static volatile int8_t uplinkCnt = LORA_UPLINK_DEFAULT_CNT;
+static volatile appLoraUplinkConfig_t *pUplinkConfig = NULL;
 
 #define SysReset  "sys reset\r\n"
 #define SysResetCmdSize (sizeof(SysReset) - 1)
@@ -207,7 +205,7 @@ int APP_LORA_WLR089_Rsp_SysReset(parserCmdInfo_t* paramList)
 {
     if( paramList->pParam1 != NULL )
     {
-        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_FULL
+        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_DEBUG
         //vTaskDelay( 5 / portTICK_PERIOD_MS );
         SYS_CONSOLE_MESSAGE("APP_LORA_WLR089_Rsp_SysReset\r\n");
         //SYS_CONSOLE_PRINT("APP_LORA_WLR089_Rsp_SysReset %s\r\n", paramList->pParam1);
@@ -224,7 +222,7 @@ int APP_LORA_WLR089_Rsp_GetDevEui(parserCmdInfo_t* paramList)
 {
     if( (paramList->pParam1 != NULL) && (paramList->pParam2 != NULL) )
     {
-        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_FULL
+        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_DEBUG
         //vTaskDelay( 5 / portTICK_PERIOD_MS );
         SYS_CONSOLE_PRINT("APP_LORA_WLR089_Rsp_GetDevEui %s\r\n", paramList->pParam1);
         //SYS_CONSOLE_PRINT("APP_LORA_WLR089_Rsp_GetDevEui %s, %x\r\n", paramList->pParam1, paramList->pParam2);
@@ -246,7 +244,7 @@ int APP_LORA_WLR089_Rsp_GetJoinEui(parserCmdInfo_t* paramList)
 {
     if( (paramList->pParam1 != NULL) && (paramList->pParam2 != NULL) )
     {
-        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_FULL
+        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_DEBUG
         //vTaskDelay( 5 / portTICK_PERIOD_MS );
         SYS_CONSOLE_PRINT("APP_LORA_WLR089_Rsp_GetJoinEui %s\r\n", paramList->pParam1);
         //SYS_CONSOLE_PRINT("APP_LORA_WLR089_Rsp_GetJoinEui %s, %x\r\n", paramList->pParam1, paramList->pParam2);
@@ -269,7 +267,7 @@ int APP_LORA_WLR089_Rsp_JoinOtaa(parserCmdInfo_t* paramList)
     uint8_t numRet = 0;
     if( paramList->pParam1 != NULL )
     {
-        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_FULL
+        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_DEBUG
         //vTaskDelay( 5 / portTICK_PERIOD_MS );
         SYS_CONSOLE_PRINT("APP_LORA_WLR089_Rsp_JoinOtaa %s\r\n", paramList->pParam1);
         #endif
@@ -289,15 +287,13 @@ int APP_LORA_WLR089_Rsp_JoinOtaa(parserCmdInfo_t* paramList)
             }
             else if( strncmp(pResp, "accepted", 8) == 0  )
             {
-                // configure data transmission parameters, e.g. uplink config, pause time, etc.
-                APP_LORA_Set_MessageTxConfiguration();
-
                 bleSensorData.loraOnOffStatus = LORA_ON;
                 SYS_CONSOLE_MESSAGE(TERM_BG_GREEN"LORAWAN CONNECTED"TERM_RESET"\r\n");
 
                 LED_RED_Clear();
                 LED_GREEN_Set();
-                APP_TIMER_SetTimer(APP_TIMER_LORA_SEND_STATUS, loraData.msgTimeout*1000, true);
+                // configure data transmission parameters, e.g. uplink config, pause time, etc. and start uplink
+                APP_LORA_Uplink_ConfigureMessageAndStart();
             }
             else
             {
@@ -323,9 +319,10 @@ int APP_LORA_WLR089_Rsp_JoinOtaa(parserCmdInfo_t* paramList)
 int APP_LORA_WLR089_Rsp_SendData(parserCmdInfo_t* paramList)
 {
     uint8_t numRet = 0;
+    bool abortUplink = false;
     if( paramList->pParam1 != NULL )
     {
-        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_FULL
+        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_DEBUG
         //vTaskDelay( 5 / portTICK_PERIOD_MS );
         //SYS_CONSOLE_MESSAGE("APP_LORA_WLR089_Rsp_SendData\r\n");
         SYS_CONSOLE_PRINT("APP_LORA_WLR089_Rsp_SendData %s\r\n", paramList->pParam1);
@@ -349,20 +346,18 @@ int APP_LORA_WLR089_Rsp_SendData(parserCmdInfo_t* paramList)
             {
                 SYS_CONSOLE_MESSAGE("[LORA] Uplink successful, no RX data\r\n");
 
-                if( txMsgCnt == 0 )
-                {
-                    APP_TIMER_StopTimer(APP_TIMER_LORA_ERROR);
-                    LED_BLUE_Clear();
+                pUplinkConfig->uplinkErrCnt = 0;    // reset error counter
 
+                if( uplinkCnt == 0 )
+                {
                     //switch message configuration
-                    if( (pMsgConfig == &loraData.msgConfig[0]) && (loraData.msgConfig[1].counter != 0) )
-                        pMsgConfig = &loraData.msgConfig[1];
-                    else if( loraData.msgConfig[0].counter != 0 )
-                        pMsgConfig = &loraData.msgConfig[0];
+                    if( (pUplinkConfig == &loraData.uplinkConfig[0]) && (loraData.uplinkConfig[1].uplinkCnt != 0) )
+                        pUplinkConfig = &loraData.uplinkConfig[1];
+                    else if( loraData.uplinkConfig[0].uplinkCnt != 0 )
+                        pUplinkConfig = &loraData.uplinkConfig[0];
                     else{}
 
-                    txMsgCnt = pMsgConfig->counter;
-                    txMsgErrCnt = 0;
+                    uplinkCnt = pUplinkConfig->uplinkCnt;
                 }
             }
             else if( strncmp(pResp, "mac_rx", 6) == 0 )
@@ -484,7 +479,7 @@ int APP_LORA_WLR089_Rsp_SendData(parserCmdInfo_t* paramList)
                 }
                 else
                 {
-                    SYS_CONSOLE_PRINT("[LORA] "TERM_RED"[Error]"TERM_RESET" payload must be 8 bytes, got %d\r\n", strLen-11);
+                    SYS_CONSOLE_PRINT("[LORA] "TERM_RED"[Error]"TERM_RESET" Payload must be 8 bytes, got %d\r\n", strLen-11);
                     numRet = 0;
                 }
             }
@@ -492,16 +487,26 @@ int APP_LORA_WLR089_Rsp_SendData(parserCmdInfo_t* paramList)
             {
                 SYS_CONSOLE_MESSAGE("[LORA] "TERM_YELLOW"Transmission Error\r\n"TERM_RESET);
 
-                txMsgErrCnt++;
+                pUplinkConfig->uplinkErrCnt++;    // increment uplink error counter
 
-                //switch message configuration
-                if( (pMsgConfig == &loraData.msgConfig[0]) && (loraData.msgConfig[1].counter != 0) )
-                    pMsgConfig = &loraData.msgConfig[1];
-                else if( loraData.msgConfig[0].counter != 0 )
-                    pMsgConfig = &loraData.msgConfig[0];
-                else{}
+                // check error counter value and if reached maximum error counter value signalize abort of periodic message uplink
+                if( pUplinkConfig->uplinkErrCnt >= pUplinkConfig->uplinkMaxErrVal )
+                {
+                    abortUplink = true;
+                }
+                else if( uplinkCnt == 0 )
+                {
+                    //switch message configuration
+                    if( (pUplinkConfig == &loraData.uplinkConfig[0]) && (loraData.uplinkConfig[1].uplinkCnt != 0) )
+                        pUplinkConfig = &loraData.uplinkConfig[1];
+                    else if( loraData.uplinkConfig[0].uplinkCnt != 0 )
+                        pUplinkConfig = &loraData.uplinkConfig[0];
+                    else{}
 
-                txMsgCnt = pMsgConfig->counter;
+                    uplinkCnt = pUplinkConfig->uplinkCnt;
+                }
+                else
+                {}
             }
 
             // use strtok + NULL pointer to get the possible next response string,
@@ -511,26 +516,24 @@ int APP_LORA_WLR089_Rsp_SendData(parserCmdInfo_t* paramList)
 
         }   // while
 
-        if( txMsgErrCnt == txMsgMaxErrCnt )
+        // abort periodic message uplink due to maximum error counter value has been reached
+        if( abortUplink == true )
         {
-            LED_BLUE_Set();
             APP_TIMER_StopTimer(APP_TIMER_LORA_SEND_STATUS);
-            APP_TIMER_SetTimer(APP_TIMER_LORA_ERROR, APP_TIMER_500MS, true);
-            txMsgErrCnt = 0;
 
-            APP_Msg_T     appMsg;
-            appCmdEntry_t cmdEntry;
+            // print only if periodic uplink has been done, not for one time uplink
+            if( pUplinkConfig->uplinkMaxErrVal != 1 )
+                SYS_CONSOLE_PRINT("[LORA] "TERM_RED"[Error]"TERM_RESET" Max number of unsuccessful uplink retries (%d) reached. Stopping periodic message uplink\r\n", pUplinkConfig->uplinkMaxErrVal);
 
-            maParserLoraGetStatusCmd.pfCmdRespCb = APP_LORA_WLR089_Rsp_GetStatus_Join;
-            cmdEntry.pLoraCmd = &maParserLoraGetStatusCmd;
-            cmdEntry.nextLoraCmdInQueue = false;
-            cmdEntry.printLoraCmdRespDataBuf = false;
-            OSAL_QUEUE_Send(&loraData.wlr089CmdQueue, &cmdEntry, 0);
+            // retrieve only the status of WLR089
+            APP_LORA_Get_Status(LORA_DEFINE_JOIN_ACTION_INFO_ONLY);
 
+            APP_Msg_T appMsg;
             appMsg.msgId = APP_MSG_LORA_TRIGGER_CMD;
             OSAL_QUEUE_Send(&loraData.appQueue, &appMsg, 0);
 
-            SYS_CONSOLE_PRINT("[LORA] "TERM_RED"[Error]"TERM_RESET" max number of transmission sequence retries (%d) reached.\r\n", LORA_PERIODIC_MSG_CNT_ABORT_MSG);
+            LED_BLUE_Set();
+            APP_TIMER_SetTimer(APP_TIMER_LORA_ERROR, APP_TIMER_500MS, true);
         }
     }
     return numRet;
@@ -849,8 +852,8 @@ void APP_LORA_WLR089_Init()
     cmdEntry.nextLoraCmdInQueue = false;
     OSAL_QUEUE_Send(&loraData.wlr089CmdQueue, &cmdEntry, 0);
 
-    loraData.msgConfig[0].msgType = LORA_DEFINE_UNCONFIRMED;
-    loraData.msgConfig[1].msgType = LORA_DEFINE_CONFIRMED;
+    loraData.uplinkConfig[0].uplinkPayloadType = LORA_DEFINE_UNCONFIRMED;
+    loraData.uplinkConfig[1].uplinkPayloadType = LORA_DEFINE_CONFIRMED;
 }
 
 int APP_LORA_WLR089_Status_Join(parserCmdInfo_t* paramList)
@@ -858,7 +861,7 @@ int APP_LORA_WLR089_Status_Join(parserCmdInfo_t* paramList)
     int ret = 0;
     if( (paramList->pParam1 != NULL) && (paramList->pParam2 != NULL) )
     {
-        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_FULL
+        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_DEBUG
         SYS_CONSOLE_PRINT("APP_LORA_WLR089_Status_Join %s\r\n", paramList->pParam1);
         #endif
 
@@ -869,7 +872,6 @@ int APP_LORA_WLR089_Status_Join(parserCmdInfo_t* paramList)
             SYS_CONSOLE_MESSAGE("[LORA] "TERM_GREEN"Still connected to the network\r\n"TERM_RESET);
             LED_RED_Clear();
             LED_GREEN_Set();
-            ((appCmdEntry_t*)(paramList->pParam2))->pLoraCmd->flags = 1;
             ret = 1;
         }
         else
@@ -877,7 +879,6 @@ int APP_LORA_WLR089_Status_Join(parserCmdInfo_t* paramList)
             bleSensorData.loraOnOffStatus = LORA_OFF;
             LED_RED_Set();
             LED_GREEN_Clear();
-            ((appCmdEntry_t*)(paramList->pParam2))->pLoraCmd->flags = 0;
         }
     }
     return ret;
@@ -887,18 +888,22 @@ int APP_LORA_WLR089_Rsp_GetStatus_Join_AutoConnect(parserCmdInfo_t* paramList)
 {
     if( (paramList->pParam1 != NULL) && (paramList->pParam2 != NULL) )
     {
-        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_FULL
+        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_DEBUG
         SYS_CONSOLE_PRINT("APP_LORA_WLR089_Rsp_GetStatus_Join_AutoConnect %s\r\n", paramList->pParam1);
         #endif
 
         // stop possible running timer and clear LED in any way
-        APP_TIMER_StopTimer(APP_TIMER_LORA_SEND_STATUS);
         APP_TIMER_StopTimer(APP_TIMER_LORA_ERROR);
         LED_BLUE_Clear();
 
         // return value: 'Join status': '0' - network not joined, '1' - network joined
-        if( APP_LORA_WLR089_Status_Join(paramList) == 0 )
+        APP_LORA_WLR089_Status_Join(paramList);
+
+        if( bleSensorData.loraOnOffStatus == LORA_OFF )
+        {
+            APP_TIMER_StopTimer(APP_TIMER_LORA_SEND_STATUS);
             SYS_CONSOLE_MESSAGE("[LORA] "TERM_YELLOW"Trying to join the network ...\r\n"TERM_RESET);
+        }
 
         appCmdEntry_t cmdEntry;
 
@@ -918,28 +923,35 @@ int APP_LORA_WLR089_Rsp_GetStatus_Join(parserCmdInfo_t* paramList)
 {
     if( (paramList->pParam1 != NULL) && (paramList->pParam2 != NULL) )
     {
-        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_FULL
+        #if LORA_MSG_VERBOSE_LEVEL == VERBOSE_LEVEL_DEBUG
         SYS_CONSOLE_PRINT("APP_LORA_WLR089_Rsp_GetStatus_Join %s\r\n", paramList->pParam1);
         #endif
+
+        // return value: 'Join status': '0' - network not joined, '1' - network joined
+        APP_LORA_WLR089_Status_Join(paramList);
+
+        if( bleSensorData.loraOnOffStatus == LORA_OFF )
+            SYS_CONSOLE_MESSAGE("[LORA] "TERM_RED"[Error]"TERM_RESET" Network not joined\r\n");
+
+        // no further action required due to retrieve the current status from WLR089 only
+        if( ((appCmdEntry_t*)(paramList->pParam2))->pLoraCmd->flags == LORA_DEFINE_JOIN_ACTION_INFO_ONLY )
+            return 0;
 
         // stop possible running timer and clear LED in any way
         APP_TIMER_StopTimer(APP_TIMER_LORA_ERROR);
         LED_BLUE_Clear();
 
-        // return value: 'Join status': '0' - network not joined, '1' - network joined
-        if( APP_LORA_WLR089_Status_Join(paramList) == 1 )
+        if( bleSensorData.loraOnOffStatus == LORA_ON )
         {
-            // configure data transmission parameters, e.g. uplink config, pause time, etc.
-            APP_LORA_Set_MessageTxConfiguration();
-
             uint16_t tmrState = APP_TIMER_IsTimerActive(APP_TIMER_LORA_SEND_STATUS);
 
             // start timer if not already running
             if( (tmrState == APP_RES_INVALID_PARA) || (tmrState == pdFALSE) )
-                APP_TIMER_SetTimer(APP_TIMER_LORA_SEND_STATUS, loraData.msgTimeout*1000, true);
+            {
+                // configure data transmission parameters, e.g. uplink config, pause time, etc. and start uplink
+                APP_LORA_Uplink_ConfigureMessageAndStart();
+            }
         }
-        else
-            SYS_CONSOLE_MESSAGE("[LORA] "TERM_RED"[Error]"TERM_RESET" Network not joined\r\n");
     }
     return 0;
 }
@@ -947,12 +959,14 @@ int APP_LORA_WLR089_Rsp_GetStatus_Join(parserCmdInfo_t* paramList)
 void APP_LORA_Join_Handler(void)
 {
     maParserLoraGetStatusCmd.pfCmdRespCb = APP_LORA_WLR089_Rsp_GetStatus_Join_AutoConnect;
+    maParserLoraGetStatusCmd.flags = 0;     // indicate no further action to do
     APP_LORA_WLR089_Get_Status();
 }
 
-void APP_LORA_Get_Status(void)
+void APP_LORA_Get_Status(uint8_t action)
 {
     maParserLoraGetStatusCmd.pfCmdRespCb = APP_LORA_WLR089_Rsp_GetStatus_Join;
+    maParserLoraGetStatusCmd.flags = action;    // assign further action to do
     APP_LORA_WLR089_Get_Status();
 }
 
@@ -961,7 +975,7 @@ void APP_LORA_TimerTrig_Handler(void)
     appCmdEntry_t cmdEntry;
 
     int cmdLen = sprintf(maParserLoraSendDataCmd.pCommand, "mac tx %s 1 %02x%02x%02x%02x%02x%02x%02x%02x%02x\r\n", \
-                            pMsgConfig->msgType, \
+                            pUplinkConfig->uplinkPayloadType, \
                             bleSensorData.rgbOnOffStatus, \
                             bleSensorData.RGB_color.Hue, \
                             bleSensorData.RGB_color.Saturation, \
@@ -973,10 +987,10 @@ void APP_LORA_TimerTrig_Handler(void)
                             (unsigned int)EXT_GPIO_Get() \
     );
 
-    txMsgCnt--;
+    uplinkCnt--;
 
-    if( txMsgCnt < 0 )
-        txMsgCnt = 0;
+    if( uplinkCnt < 0 )
+        uplinkCnt = 0;
 
     maParserLoraSendDataCmd.cmdSize = cmdLen;
     cmdEntry.pLoraCmd = &maParserLoraSendDataCmd;
@@ -985,17 +999,35 @@ void APP_LORA_TimerTrig_Handler(void)
     OSAL_QUEUE_Send(&loraData.wlr089CmdQueue, &cmdEntry, 0);
 }
 
-void APP_LORA_Set_MessageTxConfiguration(void)
+bool APP_LORA_Uplink_ConfigureMessageAndStart(void)
 {
-    loraData.msgConfig[0].counter = loraData.msgNumUncnf;
-    loraData.msgConfig[1].counter = loraData.msgNumCnf;
+    bool periodicTimer = true;
 
+    // set uplink configuration
+    loraData.uplinkConfig[0].uplinkCnt       = loraData.msgNumUncnf;
+    loraData.uplinkConfig[0].uplinkErrCnt    = 0;
+    loraData.uplinkConfig[0].uplinkMaxErrVal = LORA_UPLINK_DEFAULT_MAX_ERROR;
+    loraData.uplinkConfig[1].uplinkCnt       = loraData.msgNumCnf;
+    loraData.uplinkConfig[1].uplinkErrCnt    = 0;
+    loraData.uplinkConfig[1].uplinkMaxErrVal = LORA_UPLINK_DEFAULT_MAX_ERROR;
+
+    // if unconfirmed is 0, confirmed messages will be send only and vice versa
     if( loraData.msgNumUncnf == 0 )
-        pMsgConfig = &loraData.msgConfig[1];
+        pUplinkConfig = &loraData.uplinkConfig[1];
     else
-        pMsgConfig = &loraData.msgConfig[0];
+        pUplinkConfig = &loraData.uplinkConfig[0];
 
-    txMsgCnt = pMsgConfig->counter;
-    txMsgMaxErrCnt = (loraData.msgNumUncnf+loraData.msgNumCnf) * LORA_PERIODIC_MSG_CNT_ABORT_MSG;
+    uplinkCnt = pUplinkConfig->uplinkCnt;
+
+    // check for periodic or one time uplink
+    if( (loraData.msgNumUncnf + loraData.msgNumCnf) == 0 )
+    {
+        periodicTimer = false;              // one time message uplink
+        pUplinkConfig->uplinkMaxErrVal = 1; // set max error value accordingly to have common error handling flow as periodic uplink
+    }
+
+    APP_TIMER_SetTimer(APP_TIMER_LORA_SEND_STATUS, loraData.msgTimeout*1000, periodicTimer);
+    SYS_CONSOLE_PRINT("[LORA] "TERM_GREEN"[Successfully]"TERM_RESET" %s message uplink started\r\n", (periodicTimer == true) ? "periodic" : "one time");
+
+    return periodicTimer;
 }
-

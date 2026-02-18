@@ -122,11 +122,13 @@ typedef struct appCmdEntry
     bool  printLoraCmdRespDataBuf;
 }appCmdEntry_t;
 
-typedef struct appLoraMsgConfig
+typedef struct appLoraUplinkConfig
 {
-    char *msgType;
-    uint8_t counter;
-}appLoraMsgConfig_t;
+    char   *uplinkPayloadType;  // uplink message type (confirmed or unconfirmed)
+    uint8_t uplinkCnt;          // number of consecutive messages of the same type to send
+    uint8_t uplinkErrCnt;       // uplink error counter value
+    uint8_t uplinkMaxErrVal;    // maximum number of uplink errors
+}appLoraUplinkConfig_t;
 
 typedef struct
 {
@@ -149,7 +151,7 @@ typedef struct
     uint8_t msgNumCnf;      // number of confirmed LORA messages after sending unconfirmed message(s)
     uint8_t msgNumUncnf;    // number of unconfirmed LORA messages before sending confirmed message(s)
 
-    appLoraMsgConfig_t msgConfig[2];
+    appLoraUplinkConfig_t uplinkConfig[2];
 
 }APP_DATA_LORA;
 

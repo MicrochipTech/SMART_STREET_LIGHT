@@ -49,6 +49,7 @@
 #include "definitions.h"
 #include "app_ble_sensor.h"
 #include "app_timer/app_timer.h"
+#include "app_error_defs.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -275,20 +276,25 @@ uint8_t APP_LORA_Parse_Command(uint8_t* cmdBuf, uint8_t cmdLen)
             // has LORAWAN network already joined
             if( bleSensorData.loraOnOffStatus == LORA_ON )
             {
+                uint16_t tmrState = APP_TIMER_IsTimerActive(APP_TIMER_LORA_SEND_STATUS);
+
                 // start regular uplink only if timer is inactive
-                if( APP_TIMER_IsTimerActive(APP_TIMER_LORA_SEND_STATUS) == false )
+                if( (tmrState == APP_RES_INVALID_PARA) || (tmrState == pdFALSE) )
                 {
-                    APP_LORA_Set_MessageTxConfiguration();
-                    APP_TIMER_SetTimer(APP_TIMER_LORA_SEND_STATUS, loraData.msgTimeout*1000, true);
-                    SYS_CONSOLE_PRINT("[LORA] "TERM_GREEN"[Successfully]"TERM_RESET" regular message uplink started\r\n");
+                    // stop possible running timer and clear LED in any way
+                    APP_TIMER_StopTimer(APP_TIMER_LORA_ERROR);
+                    LED_BLUE_Clear();
+
+                    // configure data transmission parameters, e.g. uplink config, pause time, etc. and start uplink
+                    APP_LORA_Uplink_ConfigureMessageAndStart();
                 }
                 else
-                    SYS_CONSOLE_PRINT("[LORA] "TERM_YELLOW"[Regular]"TERM_RESET" message uplink still ongoing ...\r\n");
+                    SYS_CONSOLE_PRINT("[LORA] "TERM_YELLOW"[Message]"TERM_RESET" uplink still ongoing ...\r\n");
             }
             else    // check LORAWAN join state
             {
                 APP_TIMER_StopTimer(APP_TIMER_LORA_SEND_STATUS);
-                APP_LORA_Get_Status();
+                APP_LORA_Get_Status(LORA_DEFINE_JOIN_ACTION_START_UPLINK);
                 ret = 1;
             }
         }
@@ -436,28 +442,7 @@ void APP_LORA_Tasks( void )
 
             if( OSAL_QUEUE_Receive(&loraData.appQueue, &appMsg, OSAL_WAIT_FOREVER) )
             {
-                if(p_appMsg->msgId == APP_MSG_TRS_BLE_SENSOR_BTN_LORA_INT)
-                {
-                    APP_LORA_Join_Handler();
-
-                    appMsg.msgId = APP_MSG_LORA_TRIGGER_CMD;
-                    OSAL_QUEUE_Send(&loraData.appQueue, &appMsg, 0);
-                }
-                else if(p_appMsg->msgId == APP_TIMER_LORA_SEND_STATUS_MSG)
-                {
-                    APP_LORA_TimerTrig_Handler();
-
-                    appMsg.msgId = APP_MSG_LORA_TRIGGER_CMD;
-                    OSAL_QUEUE_Send(&loraData.appQueue, &appMsg, 0);
-                }
-                else if(p_appMsg->msgId == APP_TIMER_LORA_ERROR_MSG)
-                {
-                    if( APP_TIMER_IsTimerActive(APP_TIMER_LORA_ERROR) == true )
-                        LED_BLUE_Toggle();
-                    else
-                        LED_BLUE_Clear();
-                }
-                else if(p_appMsg->msgId == APP_MSG_LORA_TRIGGER_CMD)
+                if(p_appMsg->msgId == APP_MSG_LORA_TRIGGER_CMD)
                 {
                     //SYS_CONSOLE_MESSAGE(TERM_YELLOW"."TERM_RESET);
 
@@ -493,6 +478,11 @@ void APP_LORA_Tasks( void )
                             loraData.bProcessNextCmd = false;
                             loraData.state = APP_STATE_SERVICE_TASKS;
                         }
+                    }
+                    else
+                    {
+                        OSAL_QUEUE_Receive(&loraData.wlr089CmdQueue, &loraData.wlr089CmdFromQueue, 50);
+                        SYS_CONSOLE_PRINT("[LORA] "TERM_YELLOW"[Cmd]"TERM_RESET" still in progress, discarding command: %s", loraData.wlr089CmdFromQueue.pLoraCmd->pCommand);
                     }
                 }
                 else if(p_appMsg->msgId == APP_MSG_LORA_UART_CMD_CB)
@@ -603,9 +593,31 @@ void APP_LORA_Tasks( void )
 
                     loraData.bProcessNextCmd = true;
                 }
+                else if(p_appMsg->msgId == APP_MSG_TRS_BLE_SENSOR_BTN_LORA_INT)
+                {
+                    APP_LORA_Join_Handler();
+
+                    appMsg.msgId = APP_MSG_LORA_TRIGGER_CMD;
+                    OSAL_QUEUE_Send(&loraData.appQueue, &appMsg, 0);
+                }
+                else if(p_appMsg->msgId == APP_TIMER_LORA_SEND_STATUS_MSG)
+                {
+                    APP_LORA_TimerTrig_Handler();
+
+                    appMsg.msgId = APP_MSG_LORA_TRIGGER_CMD;
+                    OSAL_QUEUE_Send(&loraData.appQueue, &appMsg, 0);
+                }
+                else if(p_appMsg->msgId == APP_TIMER_LORA_ERROR_MSG)
+                {
+                    if( APP_TIMER_IsTimerActive(APP_TIMER_LORA_ERROR) == true )
+                        LED_BLUE_Toggle();
+                    else
+                        LED_BLUE_Clear();
+                }
+
                 else if(p_appMsg->msgId == APP_TIMER_LORA_MODULE_DETECT_ERROR_MSG)
                 {
-                    SYS_CONSOLE_MESSAGE(TERM_YELLOW"[LORA] Module detection timer has expired\r\n"TERM_RESET);
+                    SYS_CONSOLE_MESSAGE(TERM_YELLOW"[LORA] Module detection timer expired\r\n"TERM_RESET);
                     loraData.state = APP_STATE_LORAWAN_MODULE_NOT_AVAILABLE;
                 }
                 else

@@ -347,7 +347,7 @@ void APP_BLE_Log_Enable(void)
 {
     appBleData.bBleLogEnable = true;
     APP_PDS_Set_BleLog();
-    SYS_CONSOLE_MESSAGE("[BLE] : Log over BLE enabled\r\n");
+    SYS_CONSOLE_MESSAGE("[BLE] Log over BLE enabled\r\n");
 }
 
 /*******************************************************************************
@@ -359,7 +359,7 @@ void APP_BLE_Log_Enable(void)
  */
 void APP_BLE_Log_Disable(void)
 {
-    SYS_CONSOLE_MESSAGE("[BLE] : Log over BLE disabled\r\n");
+    SYS_CONSOLE_MESSAGE("[BLE] Log over BLE disabled\r\n");
     appBleData.bBleLogEnable = false;
     APP_PDS_Set_BleLog();
 }

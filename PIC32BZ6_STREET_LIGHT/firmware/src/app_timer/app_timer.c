@@ -125,12 +125,12 @@ static void APP_TIMER_OneShotTimerExpiredHandle(TimerHandle_t xTimer)
         break;
         case APP_TIMER_LORA_SEND_STATUS:
         {
-           //appMsg.msgId = APP_TIMER_ID_2_MSG;
+            appMsg.msgId = APP_TIMER_LORA_SEND_STATUS_MSG;
+            OSAL_QUEUE_Send(&loraData.appQueue, &appMsg, 0);
         }
         break;
         case APP_TIMER_LORA_ERROR:
         {
-            //appMsg.msgId = APP_TIMER_ID_4_MSG;
             appMsg.msgId = APP_TIMER_LORA_MODULE_DETECT_ERROR_MSG;
             OSAL_QUEUE_Send(&loraData.appQueue, &appMsg, 0);
         }
