@@ -5,7 +5,7 @@
 > "IoT Made Easy!" - This demonstrator showcases multiple wireless communication technologies powered by the PIC32‑BZ6 Wireless MCU 
 
 Devices: **| PIC32-BZ6, WLR089U0, GM02S |**<br>
-Features: **| DALI D4i, BLE, 802.15.4 Mesh Network, LoRaWAN, LTE-M |**
+Features: **| DALI D4i, BLE, THREAD, LoRaWAN, LTE-M |**
 
 
 ## ⚠ Disclaimer<!-- omit in toc -->
@@ -57,6 +57,8 @@ Checkout the <a href="https://microchipsupport.force.com/s/" target="_blank">Tec
   - [Control the demo from the MBD mobile app](#control-the-demo-from-the-mbd-mobile-app)
   - [Control the demo from the TTN console](#control-the-demo-from-the-ttn-console)
   - [Control the demo from the GUI](#control-the-demo-from-the-gui)
+  - [Configure the Thread network](#configure-the-thread-network)
+  - [Control the demo from the Thread network](#control-the-demo-from-the-thread-network)
   - [Troubleshootings](#troubleshootings)
 - [Related links](#related-links)
 
@@ -88,17 +90,17 @@ At the core of the system is the Microchip <a href="https://www.microchip.com/en
 
 ## Bill of Materials
 
-| TOOLS                                                                                                                                     | QUANTITY |
-| :---------------------------------------------------------------------------------------------------------------------------------------- | :------- |
-| <a href="https://www.microchip.com/en-us/development-tool/ev31u42a" target="_blank">PIC32-BZ6 Curiosity Board</a>                          | 1        |
-| <a href="https://www.microchip.com/en-us/development-tool/EV23M25A" target="_blank">WLR089 Xplained Pro Evaluation Kit</a>                                                         | 1        |
-| <a href="https://www.mikroe.com/dali-2-click" target="_blank">DALI 2 click</a>                                                          | 1        |
-|  <a href="https://www.microchip.com/en-us/tools-resources/reference-designs/smart-street-lighting-reference-design" target="_blank">Street Light Smart LED Driver Reference Design</a>                           | 1        |
-| <a href="https://www.mikroe.com/lte-iot-10-click?srsltid=AfmBOopZ0oW30uIoPkGGfvCQr_8gme9cHlPF3eoJpJZLG1BN1LyVjCXD" target="_blank">LTE IoT 10 click</a> | 1           |
-| <a href="https://fr.rs-online.com/web/p/antennes-gsm-et-gprs/2024210?gb=a" target="_blank">LTE Antenna</a> | 1 |
-| <a href="https://soracom.io/" target="_blank">IoT SIM</a> | 1 |
-| <a href="https://www.az-delivery.de/products/led-rgb-modul?_pos=1&_sid=384118f11&_ss=r" target="_blank">KY-016 FZ0455 3-Color RGB LED Module (optional)</a>    
-| <a href="https://www.thethingsindustries.com/docs/hardware/gateways/" target="_blank">LoRaWAN Gateway</a> | 1 |
+| TOOLS                                                                                                                                                                                 | QUANTITY |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------- |
+| <a href="https://www.microchip.com/en-us/development-tool/ev31u42a" target="_blank">PIC32-BZ6 Curiosity Board</a>                                                                     | 1        |
+| <a href="https://www.microchip.com/en-us/development-tool/EV23M25A" target="_blank">WLR089 Xplained Pro Evaluation Kit</a>                                                            | 1        |
+| <a href="https://www.mikroe.com/dali-2-click" target="_blank">DALI 2 click</a>                                                                                                        | 1        |
+| <a href="https://www.microchip.com/en-us/tools-resources/reference-designs/smart-street-lighting-reference-design" target="_blank">Street Light Smart LED Driver Reference Design</a> | 1        |
+| <a href="https://www.mikroe.com/lte-iot-10-click?srsltid=AfmBOopZ0oW30uIoPkGGfvCQr_8gme9cHlPF3eoJpJZLG1BN1LyVjCXD" target="_blank">LTE IoT 10 click</a>                               | 1        |
+| <a href="https://fr.rs-online.com/web/p/antennes-gsm-et-gprs/2024210?gb=a" target="_blank">LTE Antenna</a>                                                                            | 1        |
+| <a href="https://soracom.io/" target="_blank">IoT SIM</a>                                                                                                                             | 1        |
+| <a href="https://www.az-delivery.de/products/led-rgb-modul?_pos=1&_sid=384118f11&_ss=r" target="_blank">KY-016 FZ0455 3-Color RGB LED Module (optional)</a>                           |
+| <a href="https://www.thethingsindustries.com/docs/hardware/gateways/" target="_blank">LoRaWAN Gateway</a>                                                                             | 1        |
 
 [TOP](#contents)
 
@@ -125,24 +127,24 @@ At the core of the system is the Microchip <a href="https://www.microchip.com/en
 * Use an adapted between the LTE click board and the PIC32-BZ6 Curiosity board, as several pins on the mikroBUS header are shared with other functions and must be isolated
 * Plug the LTE IoT 10 click board into mikroBUS Header #2 (J905) using a socket adapter so that only the pins marked as **Connected** (shown below) are physically routed
 
-| LTE IoT 10 click board | Connection status | mikroBUS Header #2 (J905) on the PIC32-BZ6 Curiosity board  | 
-| :-                     | :-                | :-                                         |
-| 1 - WKP                | **Connected**     | 1 - PB5                                    |
-| 2 - RST                | **Connected**     | 2 - PC10                                   |
-| 3 - RTS                | Isolated          | 3 - PB9 - shared with user button 1        |
-| 4 - NC                 | Isolated          | 4 - PE5 - not used                         |
-| 5 - NC                 | Isolated          | 5 - PA4 - used as external GPIO            |
-| 6 - NC                 | Isolated          | 6 - PA9 - not used                         |
-| 7 - 3.3V               | **Connected**     | 7 - 3.3V
-| 8 - GND                | **Connected**     | 8 - GND
-| 9 - GND                | **Connected**     | 9 - GND
-| 10 - 5V                | **Connected**     | 10 - 5V
-| 11 - SDA               | Isolated          | 11 - PA7 - shared with SERCOM1_PAD0 used for WLR089_TX |
-| 12 - SCL               | Isolated          | 12 - PA8 - shared with SERCOM1_PAD1 used for WLR089_RX |
-| 13 - RX                | **Connected**     | 13 - PA0/UART_TX                           |
-| 14 - TX                | **Connected**     | 14 - PA1/UART_RX                           |
-| 15 - CTS               | Isolated          | 15 - PE3 - shared with user button 2       |
-| 16 - RI                | Isolated          | 16 - PC11 - not used                       |
+| LTE IoT 10 click board | Connection status | mikroBUS Header #2 (J905) on the PIC32-BZ6 Curiosity board |
+| :--------------------- | :---------------- | :--------------------------------------------------------- |
+| 1 - WKP                | **Connected**     | 1 - PB5                                                    |
+| 2 - RST                | **Connected**     | 2 - PC10                                                   |
+| 3 - RTS                | Isolated          | 3 - PB9 - shared with user button 1                        |
+| 4 - NC                 | Isolated          | 4 - PE5 - not used                                         |
+| 5 - NC                 | Isolated          | 5 - PA4 - used as external GPIO                            |
+| 6 - NC                 | Isolated          | 6 - PA9 - not used                                         |
+| 7 - 3.3V               | **Connected**     | 7 - 3.3V                                                   |
+| 8 - GND                | **Connected**     | 8 - GND                                                    |
+| 9 - GND                | **Connected**     | 9 - GND                                                    |
+| 10 - 5V                | **Connected**     | 10 - 5V                                                    |
+| 11 - SDA               | Isolated          | 11 - PA7 - shared with SERCOM1_PAD0 used for WLR089_TX     |
+| 12 - SCL               | Isolated          | 12 - PA8 - shared with SERCOM1_PAD1 used for WLR089_RX     |
+| 13 - RX                | **Connected**     | 13 - PA0/UART_TX                                           |
+| 14 - TX                | **Connected**     | 14 - PA1/UART_RX                                           |
+| 15 - CTS               | Isolated          | 15 - PE3 - shared with user button 2                       |
+| 16 - RI                | Isolated          | 16 - PC11 - not used                                       |
 
 ### Enable LoRaWAN connectivity
 
@@ -151,7 +153,7 @@ At the core of the system is the Microchip <a href="https://www.microchip.com/en
 * Power up the board using either the EDBG USB connector (J400) or the 4-pin PWR header (J100)
 
 | Signal name | PIC32-BZ6 Curiosity Board | WLR089U0 Xplained Pro Board |
-| :-          | :-                        | :-                          |
+| :---------- | :------------------------ | :-------------------------- |
 | WLR089_TX   | XPRO Header (J900) Pin 11 | EXT1 (J200) Pin 13 (PA05)   |
 | WLR089_RX   | XPRO Header (J900) Pin 12 | EXT1 (J200) Pin 14 (PA04)   |
 | WLR089_GND  | XPRO Header (J900) Pin 19 | PWR (J100) Pin 2            |
@@ -170,9 +172,9 @@ The optional external RGB LED module indicates the LoRaWAN connection status.
 * Connect the LED module to the PIC32‑BZ6 Curiosity board as shown below
 
   | PIC32-BZ6 GPIO Header (J701) | RGB LED pin Header |
-  | :-                           | :-                 |
+  | :--------------------------- | :----------------- |
   | Pin 2 (PB10)                 | G                  |
-  | Pin 3 (GND)                  | GND                | 
+  | Pin 3 (GND)                  | GND                |
   | Pin 13 (PB11)                | B                  |
   | Pin 24 (PB6)                 | R                  |
 
@@ -191,7 +193,7 @@ The application can drive the RPA4 GPIO to control an additional actuator that i
 * Serial console settings:
 
 | Baudrate | Data | Parity | Stop bits | Flow Control |
-| :-       | :-   | :-     | :-        | :-           |
+| :------- | :--- | :----- | :-------- | :----------- |
 | 115200   | 8    | No     | 1         | None         |
 
 ### Power the entire system
@@ -206,8 +208,8 @@ Power the entire system in the following order:
 ## Software Setup
 
 ### Development Tools
-- <a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide" target="_blank">MPLAB® X IDE v6.25</a>
-- MPLAB® X IDE plug-ins: MPLAB® Code Configurator (MCC) v5.7.1 and above
+- <a href="https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide" target="_blank">MPLAB® X IDE v6.30</a>
+- MPLAB® X IDE plug-ins: MPLAB® Code Configurator (MCC) v5.8.4 and above
 - MPLAB® XC32 C/C++ Compiler v4.60
 - MPLAB® Harmony v3
 - Device Pack: PIC32CX-BZ6_DFP v1.2.17
@@ -220,15 +222,18 @@ Power the entire system in the following order:
 - <a href="https://www.microchip.com/en-us/tools-resources/develop/microchip-studio" target="_blank">Microchip Studio IDE</a>
 
 ### MCC Content Libraries
-| Harmony V3 component   | version   |
-| :----------------------| :---------|
-| csp                    | v3.21.0   |
-| core                   | v3.14.2   |
-| wireless_ble           | v1.4.0    |
-| wireless_pic32cxbz_wbz | v1.5.0    |
-| wireless_system_pic32cxbz_wbz | v1.7.0 |
-| CMSIS_5                | v5.9.0    |
-| FreeRTOS-Kernel        | v11.1.0   |
+| Harmony V3 component          | version                             |
+| :---------------------------- | :---------------------------------- |
+| csp                           | v3.21.0                             |
+| core                          | v3.14.2                             |
+| wireless_ble                  | v1.4.0                              |
+| wireless_pic32cxbz_wbz        | v1.5.0                              |
+| wireless_system_pic32cxbz_wbz | v1.7.0                              |
+| CMSIS_5                       | v5.9.0                              |
+| FreeRTOS-Kernel               | v11.1.0                             |
+| openthread                    | mchp_harmony_wireless_thread_v1.3.0 |
+| wireless_15_4_phy             | v1.4.0                              |
+| wireless_thread               | v1.3.0                              |
 
 ### Harmony MCC Configuration
 
@@ -260,6 +265,22 @@ In addition to the BLE stack, the MCC Harmony v3 BLE component provides the Tran
 
 <img src="images/mcc_ble_transparent.png">
 
+#### IEEE 802.15.4 PHY Configuration<!-- omit in toc -->
+
+The IEEE 802.15.4 PHY module provides the Thread stack with access to the PIC32‑BZ6’s 802.15.4 subsystem through a defined set of PHY APIs.
+
+The module is configured to create a PHY RTOS task, and the buffer ressources required by the stack are allocated.
+
+<img src="images/mcc_ieee_802154_phy.png">
+
+#### Thread Configuration<!-- omit in toc -->
+
+Configured as an FTD (Full Thread Device), the Thread code is generated as source in this module.
+
+<img src="images/mcc_thread_stack.png">
+
+For more details, see the <a href="https://onlinedocs.microchip.com/oxy/GUID-2DB248AF-C243-496D-9819-969E43CA63BC-en-US-4/GUID-C3A4ADD3-79E7-493B-AF3B-2ECFD7BDD424.html" target="_blank">Thread MCC Configuration</a> documentation.
+
 #### LTE Module Configuration<!-- omit in toc -->
 
 The application communicates with the LTE‑M module through SERCOM5 operating in USART mode.
@@ -276,11 +297,11 @@ The application interfaces with the LoRaWAN module using SERCOM1 configured in U
 
 The application communicates with the light over the DALI bus using two GPIOs for transmit/receive signaling and one hardware Timer.
 
-| PIC32-BZ6's Peripheral | Function | Configuration |
-| :-                     | :-       | :-            |
+| PIC32-BZ6's Peripheral | Function | Configuration                                |
+| :--------------------- | :------- | :------------------------------------------- |
 | TC0                    | Timer0   | Counter in 32-bit mode, Prescaler: GCLK_TC/4 |
-| RA15                   | GPIO     | DALI_TX output |
-| RE4                    | EXTINT0  | DALI_RX input |
+| RA15                   | GPIO     | DALI_TX output                               |
+| RE4                    | EXTINT0  | DALI_RX input                                |
 
 <img src="images/mcc_tc0.png">
 
@@ -359,28 +380,28 @@ Refer to the list of [Serial console and BLE commands](#serial-console-and-ble-c
 
 #### On-board Components<!-- omit in toc -->
 
-| Component            | Description               | Behavior |
-| :-                   | :-                        | :-       |
-| User Blue LED (D801) | BLE connection indicator  | Solid blue: BLE connected<br>Blinking: not connected, advertising |
-| User button 1 (SW801) | RGB LED Control | Button pressed: toggle the on-board RGB LED state |
-| User button 2 (SW800) | LoRaWAN Join | Button pressed: trigger a LoRaWAN OTAA |
+| Component             | Description              | Behavior                                                          |
+| :-------------------- | :----------------------- | :---------------------------------------------------------------- |
+| User Blue LED (D801)  | BLE connection indicator | Solid blue: BLE connected<br>Blinking: not connected, advertising |
+| User button 1 (SW801) | RGB LED Control          | Button pressed: toggle the on-board RGB LED state                 |
+| User button 2 (SW800) | LoRaWAN Join             | Button pressed: trigger a LoRaWAN OTAA                            |
 
 #### PIC32-BZ6 Pin Settings<!-- omit in toc -->
 
 Below the list of available interfaces and the corresponding pin settings.
 
-| Interface | Pin Number | Pin ID | Custom Name | Function | Settings |
-| :-        | :-         | :-     | :-          | :-       | :-       |
-| LTE Module| A4<br>A16<br>A23<br>B14         | RB5<br>RA0<br>RC10<br>RA1    | LTE_WAKEUP<br>LTE_UART_TX<br>LTE_RESETN<br>LTE_UART_RX  | GPIO<br>SERCOM5_PAD0<br>GPIO<br>SERCOM5_PAD3     | Out, Low<br>Out<br>Out, High<br>In  |
-| On-board User Blue LED (D801) | A5 | RB7 | USER_LED | GPIO | Out, High |
-| On-board User button 1 (SW801) | B28 | RB9 | - | EXTINT1 | - |
-| On-board User button 2 (SW800) | A22 | RE3 | - | EXTINT3 | - |
-| Serial Console (DBG USB) | A12<br>B10 | RA5<br>RA6 | VCP_TX<br>VCP_RX | SERCOM0_PAD0<br>SERCOM0_PAD1 | -<br>- |
-| DALI D4i Module| A14<br>B29 | RE4<br>RA15 | DALI_RX<br>DALI_TX | EXTINT0<br>GPIO | -<br>Out, Low |
-| Optional external RGB LED Module | A18<br>B4<br>B21 | RB11<br>RB6<br>RB10 | LED_BLUE<br>LED_RED<br>LED_GREEN | GPIO<br>GPIO<br>GPIO | Out, Low<br>Out, Low<br>Out, Low |
-| On-board RGB LED | A23<br>B9<br>B20 | RC10<br>RC7<br>RE0 | RGB_GREEN<br>RGB_RED<br>RGB_BLUE | TCC0_WO2<br>TCC0_WO1<br>TCC0_WO4 | -<br>-<br>- |
-| LoRaWAN Module | A19<br>B17 | RA7<br>RA8 | WLR089_TX<br>WLR089_RX | SERCOM1_PAD0<br>SERCOM1_PAD1 | -<br>- |
-| External output | A21 | RA4 | EXT_GPIO | GPIO | Out, Low |
+| Interface                        | Pin Number              | Pin ID                    | Custom Name                                            | Function                                     | Settings                           |
+| :------------------------------- | :---------------------- | :------------------------ | :----------------------------------------------------- | :------------------------------------------- | :--------------------------------- |
+| LTE Module                       | A4<br>A16<br>A23<br>B14 | RB5<br>RA0<br>RC10<br>RA1 | LTE_WAKEUP<br>LTE_UART_TX<br>LTE_RESETN<br>LTE_UART_RX | GPIO<br>SERCOM5_PAD0<br>GPIO<br>SERCOM5_PAD3 | Out, Low<br>Out<br>Out, High<br>In |
+| On-board User Blue LED (D801)    | A5                      | RB7                       | USER_LED                                               | GPIO                                         | Out, High                          |
+| On-board User button 1 (SW801)   | B28                     | RB9                       | -                                                      | EXTINT1                                      | -                                  |
+| On-board User button 2 (SW800)   | A22                     | RE3                       | -                                                      | EXTINT3                                      | -                                  |
+| Serial Console (DBG USB)         | A12<br>B10              | RA5<br>RA6                | VCP_TX<br>VCP_RX                                       | SERCOM0_PAD0<br>SERCOM0_PAD1                 | -<br>-                             |
+| DALI D4i Module                  | A14<br>B29              | RE4<br>RA15               | DALI_RX<br>DALI_TX                                     | EXTINT0<br>GPIO                              | -<br>Out, Low                      |
+| Optional external RGB LED Module | A18<br>B4<br>B21        | RB11<br>RB6<br>RB10       | LED_BLUE<br>LED_RED<br>LED_GREEN                       | GPIO<br>GPIO<br>GPIO                         | Out, Low<br>Out, Low<br>Out, Low   |
+| On-board RGB LED                 | A23<br>B9<br>B20        | RC10<br>RC7<br>RE0        | RGB_GREEN<br>RGB_RED<br>RGB_BLUE                       | TCC0_WO2<br>TCC0_WO1<br>TCC0_WO4             | -<br>-<br>-                        |
+| LoRaWAN Module                   | A19<br>B17              | RA7<br>RA8                | WLR089_TX<br>WLR089_RX                                 | SERCOM1_PAD0<br>SERCOM1_PAD1                 | -<br>-                             |
+| External output                  | A21                     | RA4                       | EXT_GPIO                                               | GPIO                                         | Out, Low                           |
 
 <i>Note: 
 * RPC10 is multiplexed with the LTE_RESETN pin in this demo. As a result, RGB_GREEN is unavailable when the LTE module is enabled. If the LTE module is disabled, RGB_GREEN can be driven normally and the RGB LED is fully functional.
@@ -392,10 +413,10 @@ Below the list of available interfaces and the corresponding pin settings.
 
 The application is organized into several software blocks, including:
 * The H3 BLE Stack, providing local control and maintenance features such as debugging via the mobile app.
+* The H3 OpenThread software stack enables secure, self‑healing IP mesh networking and is used here to demonstrate bidirectional communication between an FTD Leader and an FTD Router using OpenThread’s UDP APIs.
 * Drivers for the LoRaWAN module, interfaced over a UART connection.
 * Drivers for the LTE-M module, also interfaced over a UART connection.
 * The MBS GmbH DALI stack, enabling standardized luminaire control.
-<!-- the H3 IEEE 802.15.4 wireless mesh for neighborhood-level networking -->
 
 The DALI stack from MBS GmbH was compiled as a dedicated library specifically for this PIC32-BZ6 demo project.
 
@@ -405,14 +426,17 @@ The DALI stack from MBS GmbH was compiled as a dedicated library specifically fo
 
 This project is built using MPLAB Harmony v3 and runs on FreeRTOS. The application is structured into multiple tasks, each handling a specific system function:
 
-| Task name      | Task size | Task priority | Task delay | Description                        |
-| :-             | :-        | :-            | :-         | :-                                 |
-| SYS_CMD_Tasks  | 1024      | 1             | 10 ms      | Handle the serial console commands |
-| APP_Tasks      | 1024      | 1             | 12 ms      | Handle the application tasks       |
-| APP_LORA_Tasks | 1024      | 1             | 12 ms      | Handle the LoRaWAN tasks           |
-| APP_DALI_Tasks | 1024      | 1             | 10 ms      | Handle the DALI tasks              |
-| APP_LTE_Tasks  | 1024      | 1             | 10 ms      | Handle the LTE tasks               |
+| Task name      | Task size | Task priority | Task delay | Description                                     |
+| :------------- | :-------- | :------------ | :--------- | :---------------------------------------------- |
+| PHY_Tasks      | 512       | 4             | -          | Handle the 802.15.4 phy tasks                   |
+| SYS_CMD_Tasks  | 1024      | 1             | 10 ms      | Handle the serial console commands              |
+| APP_Tasks      | 1024      | 1             | 12 ms      | Handle the application tasks                    |
+| APP_LORA_Tasks | 1024      | 1             | 12 ms      | Handle the LoRaWAN tasks                        |
+| APP_DALI_Tasks | 1024      | 1             | 10 ms      | Handle the DALI tasks                           |
+| APP_LTE_Tasks  | 1024      | 1             | 10 ms      | Handle the LTE tasks                            |
 | BM_Task        | 2048      | 3             | -          | The main task function for the Bluetooth module |
+| taskOpenThread | 1024      | 3             | -          | RTOS task for the OpenThread                    |
+
 
 ### Application Commands
 
@@ -423,14 +447,15 @@ Command keywords are case-sensitive, and paramters must not contain spaces. Hexa
 
 Each interface supports a different command set, defined in the files listed below.
 
-| Interface | Command definition file | Command support |
-| :-        | :- | :- |
-| Serial console | `sys_command.c` | [Serial Console and BLE Commands](#serial-console-and-ble-commands) |
-| BLE peer device (MBD mobile app) | `app_trsps_handler.c` | [Serial Console and BLE Commands](#serial-console-and-ble-commands) |
-| LTE | `app_lte.c` | [LTE Interface Commands](#lte-interface-commands) |
-| LoRaWAN | `app_lora.c` | [LORA Interface Commands](#lora-interface-commands) |
+| Interface                        | Command definition file | Command support                                                     |
+| :------------------------------- | :---------------------- | :------------------------------------------------------------------ |
+| Serial console                   | `sys_command.c`         | [Serial Console and BLE Commands](#serial-console-and-ble-commands) |
+| BLE peer device (MBD mobile app) | `app_trsps_handler.c`   | [Serial Console and BLE Commands](#serial-console-and-ble-commands) |
+| LTE                              | `app_lte.c`             | [LTE Interface Commands](#lte-interface-commands)                   |
+| LORA                             | `app_lora.c`            | [LORA Interface Commands](#lora-interface-commands)                 |
+| FTD                              | `app_thread_udp.c`      | [Thread Interface Commands](#thread-commands)                       |
 
-All four interfaces can control the on-board RGB LED, the DALI light, and the external GPIO.
+All five interfaces can control the on-board RGB LED and the DALI light.
 
 <i>Notes: 
 - Responses are prefixed with the command origin (e.g., [LORA]) to indicate which interface initiated the command.
@@ -443,41 +468,45 @@ All four interfaces can control the on-board RGB LED, the DALI light, and the ex
 
 Issue the commands below via the serial console or the BLE mobile app.
 
-| Command | Description | Parameter | Example | Expected Response |
-| :-      | :-          | :-       | :-      | :-                |
-| `help`  | Print help menu | - | help | List of supported commands |
-| `reset` | Trigger a software reset | - | reset | - |
-| `gl`    | Print the DALI gear level| - | gl | Actual level is ..% |
-| `gs`    | Print the gear status coming from `dali_gear_reaction_callback()` in DALI stack | - | gs | Received query status<br>Addr is 0, lamp is 1<br>Gear failure is 0, lamp failure is 0 |
-| `sl <level>` | Set the DALI lamp intensity in % | `<level>`: decimal value between 0 and 100 (capped at 50% by the application) | sl 10 | Setting Gear Level to 10% |
-| `lamp_on` | Set the DALI lamp intensity to the latest level | - | lamp_on | Setting Gear Level to ..% |
-| `lamp_off` | Turn OFF the DALI lamp | - | lamp_off |  Setting Gear Level to 0% |
-| `rgb_on <HH> <SS> <VV>` | Set the RGB LED color using <a href="https://colorpicker.dev/#55FFFF" target="_blank">HSV format</a> | `<HH>`: 1-byte hexadecimal number representing the Hue value<br>`<SS>`: 1-byte hexadecimal number representing the Saturation value<br>`<VV>`: 1-byte hexadecimal number representing the Value | rgb_on AA FF FF | RGB color 0xAA |
-| `rgb_off` | Turn OFF the RGB LED | - | rgb_off | RGB off |
-| `lte_on` | Enable the LTE module | - | lte_on | LTE module enabled |
-| `lte_off` | Disable the LTE module | - | lte_off | LTE module disabled |
-| `lte_set_params <URL> <PubTopic> <SubTopic>` | Set the LTE MQTT settings | `<URL>`: string value representing the MQTT broker address<br>`<PubTopic>`: string value representing the MQTT topic for publishing messages<br>`<SubTopic>`: string value representing the MQTT topic for subscribing to incoming messages | lte_set_params test.mosquitto.org endpointId/dcx/token endpointId/dcx/token/json | LTE parameter set |
-| `lte_get_params` | Print the LTE MQTT settings | - | lte_get_params | `<URL> <PubTopic> <SubTopic>` | 
-| `blelog_on` | Enable BLE debug logs | - | blelog_on | Log over BLE enabled |
-| `blelog_off` | Disable BLE debug logs | - | blelog_off | Log over BLE disabled |
-| `lorawan_on` | Enable the LoRaWAN module | - | lorawan_on | module enabled |
-| `lorawan_off` | Disable the LoRaWAN module | - | lorawan_off | module disabled |
-| `lorawan_set_keys <DevEUI> <JoinEUI> <AppKey>` | Configure the LoRaWAN OTAA credentials | `<DevEUI>`: 8-byte hexadecimal value representing the device EUI<br>`<JoinEUI>`: 8-byte hexadecimal value representing the join/application EUI<br>`<AppKey>`: 16-byte hexadecimal value representing the application key | lorawan_set_keys 7004A30B001A55D6 0011223344556677 F9112233445566778899AABBCCDDEE46 | Settings the Keys ... |
-| `lorawan_get_keys` | Print the LoRaWAN credentials | - | lorawan_get_keys | Getting the Keys ... |
-| `lorawan_join` | Trigger a LoRaWAN OTAA | - | lorawan_join | Started to join the network ... |
-| `lorawan_set_uplink <PauseSec> <UncnfMsg> <CnfMsg>` | Set the LoRaWAN transmission scheme | `<PauseSec>`: interval in seconds between consecutive uplinks (10-60)<br>`<UncnfMsg>`: number of unconfirmed uplink messages in each transmission block (0-60)<br>`<CnfMsg>`: number of confirmed uplink messages in each transmission block (0-60)| lorawan_set_uplink 60 4 1 | Uplink configuration successfully set |
-| `lorawan_get_uplink` | Print the current uplink behavior | - |lorawan_get_uplink | Uplink configuration `<PauseSec> <UncnfMsg> <CnfMsg>` |
-| `lorawan_start_uplink` | Start the LoRaWAN transmission | - | lorawan_start_uplink | regular message uplink started |
-| `lorawan_stop_uplink` | Stop the LoRaWAN transmission | - | lorawan_stop_uplink | message uplink stopped |
-| `ext_gpio_on` | Set the EXT_GPIO output to high | - | ext_gpio_on | External GPIO on |
-| `ext_gpio_off` | Clear the EXT_GPIO output | - | ext_gpio_off | External GPIO off |
-| `status` | Print the interfaces status | - | status | Status of Interfaces:<br>DALI - 4% intensity<br>RGB  - on, hue: 0xAA<br>LTE  - module disabled, disconnected<br>BLE  - log enabled, connected<br>LORA - module enabled, connected<br>GPIO - off |
+| Command                                             | Description                                                                                          | Parameter                                                                                                                                                                                                                                           | Example                                                                             | Expected Response                                                                                                                                                                                                 |
+| :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `help`                                              | Print help menu                                                                                      | -                                                                                                                                                                                                                                                   | help                                                                                | List of supported commands                                                                                                                                                                                        |
+| `reset`                                             | Trigger a software reset                                                                             | -                                                                                                                                                                                                                                                   | reset                                                                               | -                                                                                                                                                                                                                 |
+| `gl`                                                | Print the DALI gear level                                                                            | -                                                                                                                                                                                                                                                   | gl                                                                                  | Actual level is ..%                                                                                                                                                                                               |
+| `gs`                                                | Print the gear status coming from `dali_gear_reaction_callback()` in DALI stack                      | -                                                                                                                                                                                                                                                   | gs                                                                                  | Received query status<br>Addr is 0, lamp is 1<br>Gear failure is 0, lamp failure is 0                                                                                                                             |
+| `sl <level>`                                        | Set the DALI lamp intensity in %                                                                     | `<level>`: decimal value between 0 and 100 (capped at 50% by the application)                                                                                                                                                                       | sl 10                                                                               | Setting Gear Level to 10%                                                                                                                                                                                         |
+| `lamp_on`                                           | Set the DALI lamp intensity to the latest level                                                      | -                                                                                                                                                                                                                                                   | lamp_on                                                                             | Setting Gear Level to ..%                                                                                                                                                                                         |
+| `lamp_off`                                          | Turn OFF the DALI lamp                                                                               | -                                                                                                                                                                                                                                                   | lamp_off                                                                            | Setting Gear Level to 0%                                                                                                                                                                                          |
+| `rgb_on <HH> <SS> <VV>`                             | Set the RGB LED color using <a href="https://colorpicker.dev/#55FFFF" target="_blank">HSV format</a> | `<HH>`: 1-byte hexadecimal number representing the Hue value<br>`<SS>`: 1-byte hexadecimal number representing the Saturation value<br>`<VV>`: 1-byte hexadecimal number representing the Value                                                     | rgb_on AA FF FF                                                                     | RGB color 0xAA                                                                                                                                                                                                    |
+| `rgb_off`                                           | Turn OFF the RGB LED                                                                                 | -                                                                                                                                                                                                                                                   | rgb_off                                                                             | RGB off                                                                                                                                                                                                           |
+| `lte_on`                                            | Enable the LTE module                                                                                | -                                                                                                                                                                                                                                                   | lte_on                                                                              | LTE module enabled                                                                                                                                                                                                |
+| `lte_off`                                           | Disable the LTE module                                                                               | -                                                                                                                                                                                                                                                   | lte_off                                                                             | LTE module disabled                                                                                                                                                                                               |
+| `lte_set_params <URL> <PubTopic> <SubTopic>`        | Set the LTE MQTT settings                                                                            | `<URL>`: string value representing the MQTT broker address<br>`<PubTopic>`: string value representing the MQTT topic for publishing messages<br>`<SubTopic>`: string value representing the MQTT topic for subscribing to incoming messages         | lte_set_params test.mosquitto.org endpointId/dcx/token endpointId/dcx/token/json    | LTE parameter set                                                                                                                                                                                                 |
+| `lte_get_params`                                    | Print the LTE MQTT settings                                                                          | -                                                                                                                                                                                                                                                   | lte_get_params                                                                      | `<URL> <PubTopic> <SubTopic>`                                                                                                                                                                                     |
+| `blelog_on`                                         | Enable BLE debug logs                                                                                | -                                                                                                                                                                                                                                                   | blelog_on                                                                           | Log over BLE enabled                                                                                                                                                                                              |
+| `blelog_off`                                        | Disable BLE debug logs                                                                               | -                                                                                                                                                                                                                                                   | blelog_off                                                                          | Log over BLE disabled                                                                                                                                                                                             |
+| `lorawan_on`                                        | Enable the LoRaWAN module                                                                            | -                                                                                                                                                                                                                                                   | lorawan_on                                                                          | module enabled                                                                                                                                                                                                    |
+| `lorawan_off`                                       | Disable the LoRaWAN module                                                                           | -                                                                                                                                                                                                                                                   | lorawan_off                                                                         | module disabled                                                                                                                                                                                                   |
+| `lorawan_set_keys <DevEUI> <JoinEUI> <AppKey>`      | Configure the LoRaWAN OTAA credentials                                                               | `<DevEUI>`: 8-byte hexadecimal value representing the device EUI<br>`<JoinEUI>`: 8-byte hexadecimal value representing the join/application EUI<br>`<AppKey>`: 16-byte hexadecimal value representing the application key                           | lorawan_set_keys 7004A30B001A55D6 0011223344556677 F9112233445566778899AABBCCDDEE46 | Settings the Keys ...                                                                                                                                                                                             |
+| `lorawan_get_keys`                                  | Print the LoRaWAN credentials                                                                        | -                                                                                                                                                                                                                                                   | lorawan_get_keys                                                                    | Getting the Keys ...                                                                                                                                                                                              |
+| `lorawan_join`                                      | Trigger a LoRaWAN OTAA                                                                               | -                                                                                                                                                                                                                                                   | lorawan_join                                                                        | Started to join the network ...                                                                                                                                                                                   |
+| `lorawan_set_uplink <PauseSec> <UncnfMsg> <CnfMsg>` | Set the LoRaWAN transmission scheme                                                                  | `<PauseSec>`: interval in seconds between consecutive uplinks (10-60)<br>`<UncnfMsg>`: number of unconfirmed uplink messages in each transmission block (0-60)<br>`<CnfMsg>`: number of confirmed uplink messages in each transmission block (0-60) | lorawan_set_uplink 60 4 1                                                           | Uplink configuration successfully set                                                                                                                                                                             |
+| `lorawan_get_uplink`                                | Print the current uplink behavior                                                                    | -                                                                                                                                                                                                                                                   | lorawan_get_uplink                                                                  | Uplink configuration `<PauseSec> <UncnfMsg> <CnfMsg>`                                                                                                                                                             |
+| `lorawan_start_uplink`                              | Start the LoRaWAN transmission                                                                       | -                                                                                                                                                                                                                                                   | lorawan_start_uplink                                                                | regular message uplink started                                                                                                                                                                                    |
+| `lorawan_stop_uplink`                               | Stop the LoRaWAN transmission                                                                        | -                                                                                                                                                                                                                                                   | lorawan_stop_uplink                                                                 | message uplink stopped                                                                                                                                                                                            |
+| `ext_gpio_on`                                       | Set the EXT_GPIO output to high                                                                      | -                                                                                                                                                                                                                                                   | ext_gpio_on                                                                         | External GPIO on                                                                                                                                                                                                  |
+| `ext_gpio_off`                                      | Clear the EXT_GPIO output                                                                            | -                                                                                                                                                                                                                                                   | ext_gpio_off                                                                        | External GPIO off                                                                                                                                                                                                 |
+| `ftd_on`                                            | Enable UDP Router (FTD) functionality                                                                | -                                                                                                                                                                                                                                                   | ftd_on                                                                              | FTD enabled                                                                                                                                                                                                       |
+| `ftd_off`                                           | Disable UDP Router (FTD) functionality                                                               | -                                                                                                                                                                                                                                                   | ftd_off                                                                             | FTD disabled                                                                                                                                                                                                      |
+| `status`                                            | Print the interfaces status                                                                          | -                                                                                                                                                                                                                                                   | status                                                                              | Status of Interfaces:<br>DALI - 4% intensity<br>RGB  - on, hue: 0xAA<br>LTE  - module disabled, disconnected<br>BLE  - log enabled, connected<br>LORA - module enabled, connected<br>GPIO - off<br>FTD - disabled |
 
 <i>Notes: 
 - The serial console adds the prefix of the interface into the response to identify the command origin.
 - LoRaWAN uplinks are transmitted at a user‑defined periodic interval.
 - The LoRaWAN transmission scheme consists of n unconfirmed uplink messages followed by m confirmed uplink messages.
 - The LoRaWAN transmission scheme repeats indefinitely while the device remains joined to the network.
+- If either <UncnfMsg> or <CnfMsg> is set to 0, the device defaults to transmitting the other message type.
+  - Example: setting <UncnfMsg> to 0 causes confirmed uplink messages to be sent, and vice-versa.
 - When both `<UncnfMsg>` and `<CnfMsg>` are set to 0, the transmission scheme defaults to sending a single confirmed uplink.
 </i>
 
@@ -498,7 +527,7 @@ Use the `lte_set_params` command to adjust these parameters.
 Issue the commands below via an MQTT client to control the RGB LED, the DALI light and the External GPIO.
 
 | Topic        | JSON key       | Type        | Description           |
-| :-           | :-             | :-          | :-                    |
+| :----------- | :------------- | :---------- | :-------------------- |
 | set_rgb_lte  | rgb_led        | int (0/1)   | RGB LED on/off        |
 | set_rgb_lte  | color          | hex string  | RGB Hue value         |
 | switch_light | dali_light     | int (0/1)   | DALI light on/off     |
@@ -629,6 +658,18 @@ function decodeDownlink(input) {
 }
 ```
 
+#### Thread Commands<!-- omit in toc -->
+
+A Thread Leader can control the LEDs on the street-light platform operating as an FTD Router.<br>
+The application processes UDP broadcast packets from the Leader in the function shown below, defined in `app_thread_udp.c`:
+
+**Function: `void threadUdpReceiveCb(void *aContext, otMessage *aMessage, const otMessageInfo *aMessageInfo)`**
+
+| UDP message | Action Performed      |
+| :---------- | :-------------------- |
+| Toggle LED  | Toggle the RGB LED    |
+| Toggle DALI | Toggle the DALI light |
+
 ### Application Messages
 
 The application periodically publishes messages to the cloud over both LoRaWAN and LTE.
@@ -692,7 +733,7 @@ Defined in `app_lte.c`, the application sends telemetry data to the cloud only w
 The telemetry data is stored in the global variable `APP_LTE_DATA_T app_lteData`.
 
 | Telemetry data     | Periodic transmission | Description                 | Target topic    |
-| :-                 | :-                    | :-                          | :-              |
+| :----------------- | :-------------------- | :-------------------------- | :-------------- |
 | mqttMessCntLtem    | Every 60 seconds      | MQTT message counter        | mqttMessCntLtem |
 | daliLightStatus    | On-demand             | Actual Dali light status    | dali_light      |
 | daliLightIntensity | On-demand             | Actual Dali light intensity | dali_intensity  |
@@ -708,7 +749,6 @@ Use the `lte_set_params` command to adjust these parameters.
 #define LTEIOT10_MQTT_CLOUD_URL                     "\"broker.hivemq.com\""
 #define LTEIOT10_MQTT_PUB_TOPIC                     "\"endpointId/dcx/token/json\""
 ```
-
 
 [TOP](#contents)
 
@@ -731,7 +771,7 @@ The application folder can be found by navigating to the following path:
 
 Select the project configuration named `without_dali`.
 
-Follow the steps provided in the link to <a href="https://developerhelp.microchip.com/xwiki/bin/view/software-tools/ides/x/projects/building/" target="_blank">Build an program the application</a>.
+Follow the steps provided in the link to <a href="https://developerhelp.microchip.com/xwiki/bin/view/software-tools/ides/x/projects/building/" target="_blank">Build and program the application</a>.
 
 [TOP](#contents)
 
@@ -739,6 +779,7 @@ Follow the steps provided in the link to <a href="https://developerhelp.microchi
 
 ### System startup
 
+- Power on the LoRaWAN Gateway
 - Power the PIC32-BZ6 Curiosity via the Debug USB (J100)
 - Apply mains power to the LED Driver Reference Design
 - Observe the console outputs using a serial Terminal
@@ -790,14 +831,15 @@ rsp: on
 
 By default, the application configures the interfaces as follows:
 
-| Interface             | Default Status |
-| :-                    | :-             |
-| DALI                  | 10% intensity  |
-| RGB                   | OFF            |
-| LTE module            | Enabled        |
-| BLE debug logs        | Disabled       |
-| LoRaWAN module        | Enabled        |
-| External GPIO         | OFF            |
+| Interface      | Default Status |
+| :------------- | :------------- |
+| DALI           | 10% intensity  |
+| RGB            | OFF            |
+| LTE module     | Enabled        |
+| BLE debug logs | Disabled       |
+| LoRaWAN module | Enabled        |
+| External GPIO  | OFF            |
+| FTD            | Disabled       |
 
 The `status` command returns the status of all interfaces.
 
@@ -812,6 +854,7 @@ The example below shows the command sequence that can be issued over the serial 
 * status
 * sl 5
 * rgb_on AA FF FF
+
 ```text
 help
  
@@ -841,6 +884,8 @@ help
  *** lorawan_stop_uplink : LORA - stop regular uplink behavior ***
  *** ext_gpio_on : GPIO - set external GPIO ***
  *** ext_gpio_off : GPIO - clear external GPIO ***
+ *** ftd_on : FTD - Enable UDP Router (FTD) functionality ***
+ *** ftd_off : FTD - Disable UDP Router (FTD) functionality ***
  *** status : get status of interfaces ***
 lamp_off
 [DALI] Setting Gear Level to 0%
@@ -874,9 +919,20 @@ RGB color 0xAA
 
 Refer to the list of [Serial console and BLE commands](#serial-console-and-ble-commands) for more details.
 
+<i>Note:
+- The following table describes the color codes of the optional external RGB LED module:
+
+  | Color         | Description |
+  | :-            | :-             |
+  | Red           | LoRaWAN disconnected            |
+  | Green         | LoRaWAN connected       |
+  | Blue          | LoRaWAN connected, uplink error indicator: <br>Blinking in case of three consecutive uplink errors occurred (as response of sending the same type of message), otherwise cleared.        |
+
+</i>
+
 ### Configure the LTE MQTT server
 
-1. Enable the interface using the `lte_on` command if needed
+1. Enable the interface using the `lte_on` command if needed. The red PMS LED (Power-Saving Status LED indicator) on the LTE IoT 10 Click board should turn ON
 2. Configure the MQTT broker parameters of your choice by issuing `lte_set_params <URL> <PubTopic> <SubTopic>`
 3. In case new MQTT parameters are set, the application is restarting automatically the LTE state machine
 4. Monitor the connection status through the console output
@@ -915,6 +971,50 @@ The IoT dashboard provides real-time monitoring and control of the lighting devi
 <img src="images/dashboard_02.png" width=800><br>
 <img src="images/dashboard_03.png" width=800>
 
+### Configure the Thread network
+
+In this demo, Thread functionality is added to demonstrate bidirectional communication between an FTD Leader and an FTD Router using OpenThread’s UDP APIs.
+
+<img src="images/thread_network.png" width=300>
+
+In this demo, another PIC32‑BZ6 Curiosity Board is configured as the Thread Leader, serving as the core of the network. It maintains network partition information and ensures routing table consistency. This board must be programmed with the precompiled `demo_app_udp_ftd.X.production.signed.hex` file located in the hex folder. For more details, see the <a href="https://github.com/Microchip-MPLAB-Harmony/wireless_apps_pic32_bz6/tree/master/apps/thread/building_blocks/demo_app_udp/demo_app_udp_ftd" target="_blank">Thread UDP FTD Demo Application</a>.
+
+The street-light platform is configured as an FTD Router in both MCC Harmony and the `app_thread.h` file. The Thread network settings in `app_thread.h` are aligned with those used by the Thread Leader during network formation.
+
+```c
+#define DEVICE_AS_LEADER         0
+..
+#define PANID           0x1234
+#define EXD_PANID       {0x00,0x01,0x02,0x03,0x4,0x05,0x06,0x07}
+#define NWK_NAME        "MCHP_THREAD" // max charin nwk name <= 16
+#define CHANNEL         14
+#define CHANNEL_MASK    (otChannelMask)0x7fff800
+#define NW_KEY          {0x11,0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88,0x99,0xaa,0xbb,0xcc,0xdd,0xee,0xff}
+#define ML_PREFIX       {0xfd,0x00,0x00,0x00,0xfb,0x01,0x00,0x01}
+```
+
+### Control the demo from the Thread network
+
+1. Start the Thread Leader device
+2. Enable FTD Router mode on the street-light platform using the `ftd_on` command
+3. Monitor the connection status on both devices via their serial consoles
+4. Once the devices are connected, UDP messages are exchanged between the Leader and the street-light Router
+
+<img src="images/thread_msg_exchange_01.png" width=500>
+<img src="images/thread_msg_exchange_02.png" width=500>
+
+```text
+App_Log: UDP Sent data: Thread Device - Leader
+App_Log: UDP Received from fd00:0:fb01:1:5f2:fbd5:3c52:c9bd data: St rfaces:
+DALI - no bus power
+RGB  - off
+LTE  - module enabled, connected
+BLE  - log enabled, connected
+LORA - module enabled, connected
+GPIO - on
+FTD  - enabled
+```
+
 ### Troubleshootings
 
 #### DALI light driver not responding on the DALI bus<!-- omit in toc -->
@@ -926,6 +1026,10 @@ The IoT dashboard provides real-time monitoring and control of the lighting devi
 
 In this demo, pin RPC10 is multiplexed with LTE_RESETN. When the LTE module is enabled, RGB_GREEN cannot be controlled, preventing the RGB LED from turning fully off.
 When the LTE module is disabled, RGB_GREEN behaves normally, and the RGB LED operates correctly.
+
+#### LTE Module not initializing<!-- omit in toc -->
+
+Ensure the compiler optimization level is set to O1 in the project properties; at O2, the empty for‑loops used during LTE module initialization may be optimized out.
 
 [TOP](#contents)
 
@@ -941,6 +1045,14 @@ When the LTE module is disabled, RGB_GREEN behaves normally, and the RGB LED ope
 - <a href="https://www.microchip.com/en-us/development-tool/ev31u42a" target="_blank">PIC32-BZ6 Curiosity Board</a>
 - <a href="https://onlinedocs.microchip.com/oxy/GUID-657D3893-6C33-47F8-978B-86DB297AC33D-en-US-4/index.html" target="_blank">PIC32-BZ6 Application Developer's Guide</a>
 - <a href="https://github.com/Microchip-MPLAB-Harmony/wireless_apps_pic32_bz6" target="_blank">PIC32-BZ6 H3 Application Examples</a>
+
+### Bluetooth Low Energy<!-- omit in toc -->
+- <a href="https://onlinedocs.microchip.com/oxy/GUID-657D3893-6C33-47F8-978B-86DB297AC33D-en-US-5/GUID-3CC3561E-252E-43B9-BC8A-47DD108A0A46.html" target="_blank">Getting Started with Bluetooth Low Energy Applications</a>
+- <a href="https://onlinedocs.microchip.com/oxy/GUID-657D3893-6C33-47F8-978B-86DB297AC33D-en-US-5/GUID-D90F1679-2B85-470F-8079-A4F7F05198EB.html" target="_blank">BLE Transparent UART</a>
+
+### Thread<!-- omit in toc -->
+- <a href="https://onlinedocs.microchip.com/oxy/GUID-657D3893-6C33-47F8-978B-86DB297AC33D-en-US-5/GUID-38BBA2DC-AE28-4500-BCC9-0FEFC317CF04.html" target="_blank">Getting Started with Thread Applications</a>
+- <a href="https://onlinedocs.microchip.com/oxy/GUID-2DB248AF-C243-496D-9819-969E43CA63BC-en-US-4/index.html" target="_blank">Microchip Thread SDK</a>
 
 ### LoRaWAN<!-- omit in toc -->
 - <a href="https://www.microchip.com/en-us/product/wlr089u0" target="_blank">WLR089U0 Low Power LoRa(r) Sub-GHZ Module</a>
