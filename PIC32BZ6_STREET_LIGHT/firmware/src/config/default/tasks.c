@@ -60,6 +60,22 @@
 // Section: RTOS "Tasks" Routine
 // *****************************************************************************
 // *****************************************************************************
+extern TaskHandle_t taskHandleOpenThread;
+
+
+#define PHY_RTOS_TASK_PRIORITY            4
+
+/* Handle for the APP_Tasks. */
+TaskHandle_t xPHY_Tasks;
+
+static void _PHY_Tasks(  void *pvParameters  )
+{     
+    while(true)
+    {
+        PHY_Tasks();
+    }
+}
+
 #define TASK_BLE_STACK_SIZE (2 *1024 / sizeof(portSTACK_TYPE))
 #define TASK_BLE_PRIORITY (tskIDLE_PRIORITY + 3)
 
@@ -119,6 +135,7 @@ static void lAPP_LTE_Tasks( void *pvParameters )
     }
 }
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: System "Tasks" Routine
@@ -147,6 +164,13 @@ void SYS_Tasks ( void )
     /* Maintain Device Drivers */
 
     /* Maintain Middleware & Other Libraries */
+        /* Create FreeRTOS task for IEEE_802154_PHY */
+     (void)xTaskCreate((TaskFunction_t) _PHY_Tasks,
+                "PHY_Tasks",
+                512,
+                NULL,
+                PHY_RTOS_TASK_PRIORITY,
+                &xPHY_Tasks);
 
     if (xTaskCreate(BM_Task,
         "BLE",
@@ -154,6 +178,15 @@ void SYS_Tasks ( void )
         NULL,
         TASK_BLE_PRIORITY, NULL) != pdPASS)
         while (1);
+
+(void) xTaskCreate(taskOpenThread,
+                       "ot-task",
+                       1024,
+                       NULL,
+                       3,
+                       &taskHandleOpenThread);
+
+
 
     /* Maintain the application's state machine. */
 

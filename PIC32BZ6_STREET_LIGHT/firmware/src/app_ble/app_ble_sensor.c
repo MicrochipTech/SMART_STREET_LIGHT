@@ -5,7 +5,7 @@
     Microchip Technology Inc.
 
   File Name:
-    app_sensor.c
+    app_ble_sensor.c
 
   Summary:
     This file contains the Application Transparent Server Role functions for this project.

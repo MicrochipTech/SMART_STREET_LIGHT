@@ -1,0 +1,299 @@
+configVersion: 1.0.0
+componentName: adchs
+coreVersion: 5.8.4
+device: PIC32WM_BZ6204
+library: []
+dependency:
+- dependencyPackage: class com.microchip.mcc.harmony.HarmonyModule
+  name: adchs
+  type: module
+  version: ''
+- dependencyPackage: ''
+  name: CMSIS_5
+  type: package
+  version: 5.9.0
+- dependencyPackage: ''
+  name: FreeRTOS-Kernel
+  type: package
+  version: V11.1.0
+- dependencyPackage: ''
+  name: core
+  type: package
+  version: v3.14.2
+- dependencyPackage: ''
+  name: csp
+  type: package
+  version: v3.21.0
+- dependencyPackage: ''
+  name: wireless_ble
+  type: package
+  version: v1.4.0
+- dependencyPackage: ''
+  name: wireless_pic32cxbz_wbz
+  type: package
+  version: v1.5.0
+- dependencyPackage: ''
+  name: wireless_system_pic32cxbz_wbz
+  type: package
+  version: v1.7.0
+customDataClassName: com.microchip.utils_mh3.utils.persistence.CustomModuleData
+data:
+  attachments:
+    children:
+    - children:
+      - attributes:
+          id: ADCHS_ADC
+        children:
+        - children:
+          - attributes:
+              id: targetComponentID
+            children:
+            - type: Value
+              value: temp_sensor
+            type: String
+          - attributes:
+              id: targetAttachmentID
+            children:
+            - type: Value
+              value: Temp_Sensor_Dependency
+            type: String
+          type: Attributes
+        type: DirectCapability
+      type: Attachments
+    type: adchs
+  elementPosition:
+    attributes:
+      id: __ROOTVIEW
+    children:
+    - children:
+      - attributes:
+          id: adchs
+          x: '599'
+          y: '206'
+        type: ElementPosition
+      type: ElementPositions
+    type: ComponentGraph
+  symbols:
+    ADCCON1__STRGSRC:
+      attributes:
+        id: ADCCON1__STRGSRC
+      children:
+      - children:
+        - attributes:
+            id: visible
+          children:
+          - type: Value
+            value: 'true'
+          type: Boolean
+        type: Attributes
+      - children:
+        - attributes:
+            id: temp_sensor
+            value: '1'
+          type: Dynamic
+        type: Values
+      type: KeyValueSet
+    ADCCSS1__CSS10:
+      attributes:
+        id: ADCCSS1__CSS10
+      children:
+      - children:
+        - attributes:
+            id: visible
+          children:
+          - type: Value
+            value: 'true'
+          type: Boolean
+        type: Attributes
+      - children:
+        - attributes:
+            id: temp_sensor
+            value: 'true'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    ADCHS_7_ENABLE:
+      attributes:
+        id: ADCHS_7_ENABLE
+      children:
+      - children:
+        - attributes:
+            id: temp_sensor
+            value: 'true'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    ADCHS_ADCCON1:
+      attributes:
+        id: ADCHS_ADCCON1
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: '6356992'
+          type: Dynamic
+        type: Values
+      type: Hex
+    ADCHS_ADCCON2:
+      attributes:
+        id: ADCHS_ADCCON2
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: '131073'
+          type: Dynamic
+        type: Values
+      type: Hex
+    ADCHS_ADCCSS1:
+      attributes:
+        id: ADCHS_ADCCSS1
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: '1024'
+          type: Dynamic
+        type: Values
+      type: Hex
+    ADCHS_CONV_RATE7:
+      attributes:
+        id: ADCHS_CONV_RATE7
+      children:
+      - children:
+        - attributes:
+            id: visible
+          children:
+          - type: Value
+            value: 'true'
+          type: Boolean
+        type: Attributes
+      - children:
+        - attributes:
+            id: adchs
+            value: '1882.3529'
+          type: Dynamic
+        type: Values
+      type: Float
+    ADCHS_DMA_STATUS_REG:
+      attributes:
+        id: ADCHS_DMA_STATUS_REG
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: ADCDMASTAT
+          type: Dynamic
+        type: Values
+      type: String
+    ADCHS_TADC7:
+      attributes:
+        id: ADCHS_TADC7
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: '31.25'
+          type: Dynamic
+        type: Values
+      type: Float
+    ADC_CALLBACK_API:
+      attributes:
+        id: ADC_CALLBACK_API
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: ADCHS_CallbackRegister
+          type: Dynamic
+        type: Values
+      type: String
+    ADC_CH_PHASE_U:
+      attributes:
+        id: ADC_CH_PHASE_U
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: ADCHS_CH0
+          type: Dynamic
+        type: Values
+      type: String
+    ADC_CH_PHASE_V:
+      attributes:
+        id: ADC_CH_PHASE_V
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: ADCHS_CH4
+          type: Dynamic
+        type: Values
+      type: String
+    ADC_CH_POT:
+      attributes:
+        id: ADC_CH_POT
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: ADCHS_CH15
+          type: Dynamic
+        type: Values
+      type: String
+    ADC_CH_VDC_BUS:
+      attributes:
+        id: ADC_CH_VDC_BUS
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: ADCHS_CH10
+          type: Dynamic
+        type: Values
+      type: String
+    ADC_GET_RESULT_API:
+      attributes:
+        id: ADC_GET_RESULT_API
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: ADCHS_ChannelResultGet
+          type: Dynamic
+        type: Values
+      type: String
+    ADC_IS_RESULT_READY_API:
+      attributes:
+        id: ADC_IS_RESULT_READY_API
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: ADCHS_ChannelResultIsReady
+          type: Dynamic
+        type: Values
+      type: String
+    ADC_START_CONV_API:
+      attributes:
+        id: ADC_START_CONV_API
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: ADCHS_ChannelConversionStart
+          type: Dynamic
+        type: Values
+      type: String
+    INTERRUPT_ADC_RESULT:
+      attributes:
+        id: INTERRUPT_ADC_RESULT
+      children:
+      - children:
+        - attributes:
+            id: adchs
+            value: INT_SOURCE_ADC_DATA0
+          type: Dynamic
+        type: Values
+      type: String
+  userData: {}

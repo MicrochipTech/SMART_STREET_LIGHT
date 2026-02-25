@@ -38,38 +38,62 @@
 // DOM-IGNORE-END
 
 #include "definitions.h"
+#include "app_thread.h"
+
 void app_idle_task( void )
 {
     uint8_t PDS_Items_Pending = PDS_GetPendingItemsCount();
     bool RF_Cal_Needed = RF_NeedCal(); // device_support library API
     uint8_t BT_RF_Suspended = 0;
 
-    if (PDS_Items_Pending || RF_Cal_Needed)
+    if(PDS_Items_Pending || RF_Cal_Needed)
     {
         OSAL_CRITSECT_DATA_TYPE IntState;
         IntState = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_HIGH);
-        BT_RF_Suspended = BT_SYS_RfSuspendReq(1);
+        BT_RF_Suspended = BT_SYS_RfSuspendReq(true);
         //once BT_RF_Suspended is true, BT internal RF_Suspend_Req_Flag will be set,
         //and BT is forbidden to prepare RF.
         OSAL_CRIT_Leave(OSAL_CRIT_TYPE_HIGH, IntState);
 
 
-        if (BT_RF_Suspended)
+        if(BT_RF_Suspended)
         {
-            if (PDS_Items_Pending)
+            if(otIsIdle())
             {
-                PDS_StoreItemTaskHandler();
+                if(PDS_Items_Pending)
+                {
+                    PDS_StoreItemTaskHandler();
+                }
+                else if((RF_Cal_Needed) && (BT_RF_Suspended == BT_SYS_RF_SUSPENDED_NO_SLEEP) && !ftdModuleEnable)
+                {
+                    PHY_TrxStatus_t trxStatus = PHY_GetTrxStatus();
+                    OSAL_CRITSECT_DATA_TYPE intStatus;
+                    if(trxStatus == PHY_TRX_SLEEP)
+                    {
+                        PHY_TrxWakeup();
+                        intStatus = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+                        RF_Timer_Cal(WSS_ENABLE_BLE_ZB);
+                        OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, intStatus);
+                        PHY_TrxSleep(SLEEP_MODE_1);
+                    }
+                    else if(trxStatus == PHY_TRX_OFF)
+                    {
+                        RF_Timer_Cal(WSS_ENABLE_BLE_ZB);
+                    }
+                }
             }
-            else if ((RF_Cal_Needed) && (BT_RF_Suspended == BT_SYS_RF_SUSPENDED_NO_SLEEP))
-            {
-                   RF_Timer_Cal(WSS_ENABLE_BLE);
-            }
-            BT_SYS_RfSuspendReq(0);
+            BT_SYS_RfSuspendReq(false);
         }
     }
 }
 
-
+/*
+    Devices which do not support Sleep needs to define this function.
+*/
+void vPortSuppressTicksAndSleep( TickType_t xExpectedIdleTime )
+{
+    (void) xExpectedIdleTime;    
+}
 
 
 /*-----------------------------------------------------------*/

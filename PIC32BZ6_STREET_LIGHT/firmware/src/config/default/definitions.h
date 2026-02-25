@@ -53,6 +53,11 @@
 #include <string.h>
 #include "peripheral/sercom/usart/plib_sercom0_usart.h"
 #include "peripheral/sercom/usart/plib_sercom1_usart.h"
+#include "peripheral/rcon/plib_rcon.h"
+#include "driver/IEEE_802154_PHY/phy/inc/phy.h"
+#include "driver/IEEE_802154_PHY/phy/inc/phy_tasks.h"
+#include "driver/security/cryptosym/trng_api.h"
+#include "driver/security/cryptosym/statuscodes.h"
 /*******************************************************************************
 * Copyright (C) 2025 Microchip Technology Inc. and its subsidiaries.
 *
@@ -83,9 +88,13 @@
 #include "peripheral/gpio/plib_gpio.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/dmac/plib_dmac.h"
+#include "peripheral/wdt/plib_wdt.h"
 #include "peripheral/cmcc/plib_cmcc.h"
 #include "peripheral/sercom/usart/plib_sercom5_usart.h"
 #include "peripheral/eic/plib_eic.h"
+#include "platform-pic32cx.h"
+#include "openthread-system.h"
+#include "ot_tasks.h"
 #include "peripheral/nvm/plib_nvm.h"
 #include "system/time/sys_time.h"
 #include "peripheral/tcc/plib_tcc0.h"

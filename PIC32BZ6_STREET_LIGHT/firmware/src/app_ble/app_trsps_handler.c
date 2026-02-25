@@ -60,6 +60,7 @@
 #include "../app_trps.h"
 #include "app_ble.h"
 #include "app_lora/app_lora.h"
+#include "app_thread.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -333,15 +334,35 @@ void APP_TrspsEvtHandler(BLE_TRSPS_Event_T *p_event)
                     sprintf((char *)appMsg.msgData, "External GPIO off");
                 }
             }
+            else if(strncmp((char *)bleData, "ftd_on", data_len) == 0)
+            {
+                APP_FTD_Enable();
+
+                SYS_CONSOLE_PRINT("FTD enabled\r\n");
+                if(appBleData.bBleLogEnable == false)
+                {
+                    sprintf((char *)appMsg.msgData, "FTD enabled");
+                }
+            }
+            else if(strncmp((char *)bleData, "ftd_off", data_len) == 0)
+            {
+                APP_FTD_Disable();
+
+                SYS_CONSOLE_PRINT("FTD module disabled\r\n");
+                if(appBleData.bBleLogEnable == false)
+                {
+                    sprintf((char *)appMsg.msgData, "FTD module disabled");
+                }
+            }
             else if(strncmp((char *)bleData, "status", data_len) == 0)
             {
-                uint8_t status[256];
+                uint8_t status[300];
 
                 GetInterfaceStatusString((char *)status, sizeof(status));
                 SYS_CONSOLE_PRINT((char *)status);
                 if(appBleData.bBleLogEnable == false)
                 {
-                    sprintf((char *)appMsg.msgData, (char *)status);
+                    snprintf((char *)appMsg.msgData, sizeof(appMsg.msgData), "%.*s", sizeof(appMsg.msgData) - 1, (char *)status);
                 }
             }
             // LORA bypass command must start with 'sys', 'mac' or 'radio'

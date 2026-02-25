@@ -62,6 +62,8 @@
 #include "app_ble_conn_handler.h"
 #include "app_lora/app_lora.h"
 #include "app_lte/app_lte.h"
+#include "app_thread.h"
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -230,6 +232,8 @@ void APP_Tasks ( void )
 
             LED_RED_Set();
             LED_GREEN_Clear();
+
+            APP_FTD_Init();
 
             if( appInitialized )
             {

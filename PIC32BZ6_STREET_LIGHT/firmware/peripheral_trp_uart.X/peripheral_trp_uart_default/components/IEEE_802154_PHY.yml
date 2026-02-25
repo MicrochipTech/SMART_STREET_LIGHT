@@ -1,0 +1,135 @@
+configVersion: 1.0.0
+componentName: IEEE_802154_PHY
+coreVersion: 5.8.4
+device: PIC32WM_BZ6204
+library: []
+dependency:
+- dependencyPackage: class com.microchip.mcc.harmony.HarmonyModule
+  name: IEEE_802154_PHY
+  type: module
+  version: ''
+- dependencyPackage: ''
+  name: wireless_15_4_phy
+  type: package
+  version: v1.4.0
+customDataClassName: com.microchip.utils_mh3.utils.persistence.CustomModuleData
+data:
+  attachments: {}
+  elementPosition:
+    attributes:
+      id: __ROOTVIEW
+    children:
+    - children:
+      - attributes:
+          id: IEEE_802154_PHY
+          x: '927'
+          y: '525'
+        type: ElementPosition
+      type: ElementPositions
+    type: ComponentGraph
+  symbols:
+    CREATE_PHY_RTOS_TASK:
+      attributes:
+        id: CREATE_PHY_RTOS_TASK
+      children:
+      - children:
+        - attributes:
+            id: OPEN_THREAD
+            value: 'true'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    CREATE_PHY_SEMAPHORE:
+      attributes:
+        id: CREATE_PHY_SEMAPHORE
+      children:
+      - children:
+        - attributes:
+            id: OPEN_THREAD
+            value: 'true'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    CUSTOM_ANT_GAIN:
+      attributes:
+        id: CUSTOM_ANT_GAIN
+      children:
+      - children:
+        - attributes:
+            id: IEEE_802154_PHY
+            value: '3'
+          type: Dynamic
+        type: Values
+      type: Integer
+    PHY_INTEGER_BMMLARGEBUFFERS:
+      attributes:
+        id: PHY_INTEGER_BMMLARGEBUFFERS
+      children:
+      - children:
+        - attributes:
+            id: readOnly
+          children:
+          - type: Value
+            value: 'true'
+          type: Boolean
+        type: Attributes
+      - children:
+        - attributes:
+            id: OPEN_THREAD
+            value: '9'
+          type: Dynamic
+        type: Values
+      type: Integer
+    PHY_PTA_ENABLE:
+      attributes:
+        id: PHY_PTA_ENABLE
+      children:
+      - children:
+        - attributes:
+            id: IEEE_802154_PHY
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    PHY_TASK_PRIORITY:
+      attributes:
+        id: PHY_TASK_PRIORITY
+      children:
+      - children:
+        - attributes:
+            id: readOnly
+          children:
+          - type: Value
+            value: 'true'
+          type: Boolean
+        type: Attributes
+      - children:
+        - attributes:
+            id: OPEN_THREAD
+            value: '4'
+          type: Dynamic
+        type: Values
+      type: Integer
+    TX_PWR_MAX_NON_FHSS:
+      attributes:
+        id: TX_PWR_MAX_NON_FHSS
+      children:
+      - children:
+        - attributes:
+            id: IEEE_802154_PHY
+            value: '14'
+          type: Dynamic
+        type: Values
+      type: Integer
+    USE_CUSTOM_ANT_GAIN:
+      attributes:
+        id: USE_CUSTOM_ANT_GAIN
+      children:
+      - children:
+        - attributes:
+            id: IEEE_802154_PHY
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+  userData: {}

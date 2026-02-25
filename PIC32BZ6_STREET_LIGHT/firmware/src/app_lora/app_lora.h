@@ -28,7 +28,7 @@
     Microchip Technology Inc.
 
   File Name:
-    app_ble.h
+    app_lora.h
 
   Summary:
     This header file provides prototypes and definitions for the application.

@@ -28,7 +28,7 @@
     Microchip Technology Inc.
 
   File Name:
-    app_ble.h
+    app_pds.h
 
   Summary:
     This header file provides prototypes and definitions for the application.
@@ -91,6 +91,7 @@ typedef enum
     PDS_LORA_MSG_TIMEOUT_ITEM_ID,
     PDS_LORA_MSG_NUM_CNF_ITEM_ID,
     PDS_LORA_MSG_NUM_UNCNF_ITEM_ID,
+    PDS_MODULE_FTD_ENABLE_ITEM_ID,
     APP_MAX_PDS_ITEMS_ID
 }eIDsAndKeys;
 

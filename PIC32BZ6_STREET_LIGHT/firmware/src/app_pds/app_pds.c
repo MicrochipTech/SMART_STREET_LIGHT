@@ -29,7 +29,7 @@
     Microchip Technology Inc.
 
   File Name:
-    app_lora_pds.c
+    app_pds.c
 
   Summary:
     This file contains the Application PDS implementation for this project.

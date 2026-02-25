@@ -240,8 +240,8 @@ void CLOCK_Initialize( void )
     // Change src_clk source to PLL CLK
     BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG1 |= 0x00000010U;
 
-    // set aclb_reset_n[24], bt_en_main_clk[20]
-    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 |= 0x01100000U;
+    // set aclb_reset_n[24], bt_en_main_clk[20] zb_en_main_clk[4]
+    BTZBSYS_REGS->BTZBSYS_SUBSYS_CNTRL_REG0 |= 0x01100010U;
 
         /* Power down the UPLL */
         CRU_REGS->CRU_UPLLCON = CRU_UPLLCON_UPLLPWDN_Msk;

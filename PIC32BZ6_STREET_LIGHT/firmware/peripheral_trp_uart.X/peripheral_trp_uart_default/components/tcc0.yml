@@ -1,0 +1,353 @@
+configVersion: 1.0.0
+componentName: tcc0
+coreVersion: 5.8.4
+device: PIC32WM_BZ6204
+library: []
+dependency:
+- dependencyPackage: class com.microchip.mcc.harmony.HarmonyModule
+  name: tcc0
+  type: module
+  version: ''
+- dependencyPackage: ''
+  name: CMSIS_5
+  type: package
+  version: 5.9.0
+- dependencyPackage: ''
+  name: FreeRTOS-Kernel
+  type: package
+  version: V11.1.0
+- dependencyPackage: ''
+  name: core
+  type: package
+  version: v3.14.2
+- dependencyPackage: ''
+  name: csp
+  type: package
+  version: v3.21.0
+- dependencyPackage: ''
+  name: wireless_ble
+  type: package
+  version: v1.4.0
+- dependencyPackage: ''
+  name: wireless_pic32cxbz_wbz
+  type: package
+  version: v1.5.0
+- dependencyPackage: ''
+  name: wireless_system_pic32cxbz_wbz
+  type: package
+  version: v1.7.0
+customDataClassName: com.microchip.utils_mh3.utils.persistence.CustomModuleData
+data:
+  attachments:
+    children:
+    - children:
+      - attributes:
+          id: TCC0_PWM
+        children:
+        - children:
+          - attributes:
+              id: targetComponentID
+            children:
+            - type: Value
+              value: rgb_led
+            type: String
+          - attributes:
+              id: targetAttachmentID
+            children:
+            - type: Value
+              value: RGB_LED_PWM_Dependency
+            type: String
+          type: Attributes
+        type: DirectCapability
+      - attributes:
+          id: TCC0_TMR
+        children:
+        - children:
+          - attributes:
+              id: enabled
+            children:
+            - type: Value
+              value: 'false'
+            type: Boolean
+          type: Attributes
+        type: DirectCapability
+      type: Attachments
+    type: tcc0
+  elementPosition:
+    attributes:
+      id: __ROOTVIEW
+    children:
+    - children:
+      - attributes:
+          id: tcc0
+          x: '398'
+          y: '332'
+        type: ElementPosition
+      type: ElementPositions
+    type: ComponentGraph
+  symbols:
+    INTR_PWM_FAULT:
+      attributes:
+        id: INTR_PWM_FAULT
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0_OTHER_IRQn
+          type: Dynamic
+        type: Values
+      type: String
+    PWM_CALLBACK_API:
+      attributes:
+        id: PWM_CALLBACK_API
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0_PWMCallbackRegister
+          type: Dynamic
+        type: Values
+      type: String
+    PWM_GET_PERIOD_API:
+      attributes:
+        id: PWM_GET_PERIOD_API
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0_PWM24bitPeriodGet
+          type: Dynamic
+        type: Values
+      type: String
+    PWM_OUTPUT_DISABLE_API:
+      attributes:
+        id: PWM_OUTPUT_DISABLE_API
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0_PWMPatternSet
+          type: Dynamic
+        type: Values
+      type: String
+    PWM_OUTPUT_ENABLE_API:
+      attributes:
+        id: PWM_OUTPUT_ENABLE_API
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0_PWMPatternSet
+          type: Dynamic
+        type: Values
+      type: String
+    PWM_PATTERN_MASK:
+      attributes:
+        id: PWM_PATTERN_MASK
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: '119'
+          type: Dynamic
+        type: Values
+      type: Hex
+    PWM_PH_MASK:
+      attributes:
+        id: PWM_PH_MASK
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: '7'
+          type: Dynamic
+        type: Values
+      type: Hex
+    PWM_PH_U:
+      attributes:
+        id: PWM_PH_U
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0CHANNEL0
+          type: Dynamic
+        type: Values
+      type: String
+    PWM_PH_V:
+      attributes:
+        id: PWM_PH_V
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0CHANNEL1
+          type: Dynamic
+        type: Values
+      type: String
+    PWM_PH_W:
+      attributes:
+        id: PWM_PH_W
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0CHANNEL2
+          type: Dynamic
+        type: Values
+      type: String
+    PWM_SET_DUTY_API:
+      attributes:
+        id: PWM_SET_DUTY_API
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0_PWM24bitDutySet
+          type: Dynamic
+        type: Values
+      type: String
+    PWM_START_API:
+      attributes:
+        id: PWM_START_API
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0_PWMStart
+          type: Dynamic
+        type: Values
+      type: String
+    PWM_STOP_API:
+      attributes:
+        id: PWM_STOP_API
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: TCC0_PWMStop
+          type: Dynamic
+        type: Values
+      type: String
+    TCC_CAPTURE_INTERRUPT_MODE:
+      attributes:
+        id: TCC_CAPTURE_INTERRUPT_MODE
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    TCC_COMPARE_CTRLBSET_LUPD:
+      attributes:
+        id: TCC_COMPARE_CTRLBSET_LUPD
+      children:
+      - children:
+        - attributes:
+            id: rgb_led
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    TCC_COMPARE_INTERRUPT_MODE:
+      attributes:
+        id: TCC_COMPARE_INTERRUPT_MODE
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    TCC_COMPARE_WAVE_WAVEGEN:
+      attributes:
+        id: TCC_COMPARE_WAVE_WAVEGEN
+      children:
+      - children:
+        - attributes:
+            id: rgb_led
+            value: '2'
+          type: Dynamic
+        type: Values
+      type: KeyValueSet
+    TCC_CTRLA_RUNSTDBY:
+      attributes:
+        id: TCC_CTRLA_RUNSTDBY
+      children:
+      - children:
+        - attributes:
+            id: rgb_led
+            value: 'true'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    TCC_OPERATION_MODE:
+      attributes:
+        id: TCC_OPERATION_MODE
+      children:
+      - children:
+        - attributes:
+            id: rgb_led
+            value: Compare
+          type: Dynamic
+        type: Values
+      type: Combo
+    TCC_PWM_INTERRUPT_MODE:
+      attributes:
+        id: TCC_PWM_INTERRUPT_MODE
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: 'false'
+          type: Dynamic
+        type: Values
+      type: Boolean
+    TCC_RAMP_CH1_DUTY:
+      attributes:
+        id: TCC_RAMP_CH1_DUTY
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: '0'
+          type: Dynamic
+        type: Values
+      type: Integer
+    TCC_RAMP_CYCLEA_PERIOD:
+      attributes:
+        id: TCC_RAMP_CYCLEA_PERIOD
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: '2399'
+          type: Dynamic
+        type: Values
+      type: Integer
+    TCC_RAMP_CYCLEB_PERIOD:
+      attributes:
+        id: TCC_RAMP_CYCLEB_PERIOD
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: '2399'
+          type: Dynamic
+        type: Values
+      type: Integer
+    TCC_TIMER_INTERRUPT_MODE:
+      attributes:
+        id: TCC_TIMER_INTERRUPT_MODE
+      children:
+      - children:
+        - attributes:
+            id: tcc0
+            value: 'true'
+          type: Dynamic
+        type: Values
+      type: Boolean
+  userData: {}

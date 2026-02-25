@@ -319,6 +319,7 @@ SYSTEM_OBJECTS sysObj;
 // Section: Library/Stack Initialization Data
 // *****************************************************************************
 // *****************************************************************************
+OSAL_SEM_HANDLE_TYPE semPhyInternalHandler;
 /*******************************************************************************
 * Copyright (C) 2022 Microchip Technology Inc. and its subsidiaries.
 *
@@ -373,6 +374,8 @@ OSAL_QUEUE_HANDLE_TYPE bleRequestQueueHandle;
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
+OSAL_QUEUE_HANDLE_TYPE OTQueue;
+#define OT_TASK_QUEUE_SIZE 128
 
 
 // *****************************************************************************
@@ -551,7 +554,7 @@ void SYS_Initialize ( void* data )
     /* MISRA C-2012 Rule 11.8 - Deviation record ID - H3_MISRAC_2012_R_11_8_DR_1 */
 
     // Initialize RF System
-    SYS_Load_Cal(WSS_ENABLE_BLE);
+    SYS_Load_Cal(WSS_ENABLE_BLE_ZB);
  
     // Set up OSAL for RF Stack Library usage
     osalAPIList.OSAL_CRIT_Enter      = OSAL_CRIT_Enter;
@@ -613,9 +616,16 @@ void SYS_Initialize ( void* data )
     sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
     
     /* MISRAC 2012 deviation block end */
+    /* Initialization for IEEE_802154_PHY */
+    OSAL_SEM_Create(&semPhyInternalHandler, OSAL_SEM_TYPE_COUNTING, 20, 0);
+
+    PHY_Init();
+    
+    /* End of Initialization for IEEE_802154_PHY */
+
     /* MISRA C-2012 Rule 11.3, 11.8 deviated below. Deviation record ID -  
      H3_MISRAC_2012_R_11_3_DR_1 & H3_MISRAC_2012_R_11_8_DR_1*/
-        sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT *)&sysConsole0Init);
+    sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT *)&sysConsole0Init);
    /* MISRAC 2012 deviation block end */
     sysObj.sysCommand = (uint32_t) SYS_CMD_Initialize((SYS_MODULE_INIT*)&sysCmdInit);
 
@@ -645,6 +655,13 @@ void SYS_Initialize ( void* data )
 
     // Initialize BLE Stack
     BT_SYS_Init(&bleRequestQueueHandle, &osalAPIList, &btOption, &btSysCfg);
+
+    /*Open Thread System Initialization*/
+    otSysInit(0U, 0U);
+    
+    /* Creation of openthread Task Queue */
+    OSAL_QUEUE_Create(&OTQueue, OT_TASK_QUEUE_SIZE, sizeof(OT_Msg_T));
+
 
     /* MISRAC 2012 deviation block end */
     APP_Initialize();

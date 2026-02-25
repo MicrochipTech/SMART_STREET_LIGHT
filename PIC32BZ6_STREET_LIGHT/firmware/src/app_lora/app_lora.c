@@ -29,7 +29,7 @@
     Microchip Technology Inc.
 
   File Name:
-    app_ble.c
+    app_lora.c
 
   Summary:
     This file contains the Application LORA implementation for this project.

@@ -63,6 +63,7 @@
 #include "app_ble.h"
 #include "app_ble_conn_handler.h"
 #include "peripheral/wdt/plib_wdt.h"
+#include "app_thread.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -229,6 +230,8 @@ static void     CommandLoraWanStartUplink(SYS_CMD_DEVICE_NODE* pCmdIO, int argc,
 static void     CommandLoraWanStopUplink(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void     CommandExtGpioOn(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void     CommandExtGpioOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void     CommandThreadOn(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void     CommandThreadOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void     CommandStatus(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 static int      StringToArgs(char *str, char *argv[], size_t argvSize);
@@ -293,6 +296,8 @@ const SYS_CMD_DESCRIPTOR    builtinCmdTbl[]=
     {"lorawan_stop_uplink", CommandLoraWanStopUplink,   ": LORA - stop regular uplink behavior"},
     {"ext_gpio_on",         CommandExtGpioOn,           ": GPIO - set external GPIO"},
     {"ext_gpio_off",        CommandExtGpioOff,          ": GPIO - clear external GPIO"},
+    {"ftd_on",              CommandThreadOn,            ": FTD - Enable UDP Router (FTD) functionality"},
+    {"ftd_off",             CommandThreadOff,           ": FTD - Disable UDP Router (FTD) functionality"},
     {"status",              CommandStatus,              ": get status of interfaces"},
     {NULL,                  NULL,                       NULL} // mark end of array
 };
@@ -1473,6 +1478,36 @@ static void CommandExtGpioOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
     }
 }
 
+static void CommandThreadOn(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(argc == 1)
+    {
+        APP_FTD_Enable();
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTD enabled" LINE_TERM);
+    }
+    else
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, " *** USAGE: ftd_on" LINE_TERM);
+    }
+}
+
+static void CommandThreadOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(argc == 1)
+    {
+        APP_FTD_Disable();
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTD disabled" LINE_TERM);
+    }
+    else
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, " *** USAGE: ftd_off" LINE_TERM);
+    }
+}
+
 static void CommandStatus(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
@@ -1583,8 +1618,17 @@ void GetInterfaceStatusString(char *stsString, size_t strSize)
         {
             len += snprintf(stsString + len, strSize - len, "GPIO - off" LINE_TERM);
         }
+        // FTD status
+        if(ftdModuleEnable == false)
+        {
+            len += snprintf(stsString + len, strSize - len, "FTD  - disabled" LINE_TERM);
+        }
+        else
+        {
+            len += snprintf(stsString + len, strSize - len, "FTD  - enabled" LINE_TERM);
+        }
         // add string termination character
-        stsString[len] = '\0';
+        stsString[strSize - 1] = '\0';
 }
 
 static void ParseCmdBuffer(SYS_CMD_IO_DCPT* pCmdIO)
